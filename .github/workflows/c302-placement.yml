@@ -20,3 +20,4 @@ jobs:
       - run: pip install numpy pytest torch
       - run: python -m c302_placement run
       - run: pytest -q tests/test_c302_placement.py
+      - run: python -m c302_placement dynamics --output /tmp/c302-dynamics.json

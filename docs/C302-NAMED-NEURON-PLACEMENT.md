@@ -84,6 +84,38 @@ This tests whether the imported structure carries load in the Anima cell
 substrate. It does not reproduce c302 membrane biophysics, simulate muscles, or
 establish consciousness.
 
+## Phase 2 result
+
+Executed over all 25 pre-registered arm/seed combinations. The run completed
+with all 302 named cells preserved in every stimulated and sham trajectory. A
+second full execution reproduced every result field exactly after excluding the
+timestamp.
+
+| arm | median motor response AUC | actual paired wins |
+|---|---:|---:|
+| actual | 0.226631 | — |
+| connection shuffle | 0.226543 | 1/5 |
+| flat | 0.226693 | 2/5 |
+| position shuffle | 0.226614 | 3/5 |
+| random | 0.226577 | 1/5 |
+
+**Verdict: failed.** Actual/best-control is 0.999725 and no control comparison
+reaches the required 4/5 paired wins. The canonical placement therefore has no
+measured advantage under this protocol. Secondary Phi, tension, peak-response,
+and transmission readings do not override that result.
+
+The run also exposed an instrument limitation that was not used to alter the
+verdict. Canonical c302 types contain 111 sensory and 147 motor neurons, with 27
+neurons carrying both roles. Because phase 2 stimulated every sensory-labelled
+cell and read every motor-labelled cell, those 27 cells contribute direct input
+response to the primary motor AUC. The near-identical arm values are therefore
+not strong evidence that topology never matters; they show that this registered
+readout does not separate topology-mediated transmission from direct dual-role
+activation. Any exclusive-motor readout must be a separately registered
+experiment, not a rewritten phase 2 score.
+
+Canonical result: `state/c302-named-neuron-dynamics.json`.
+
 ## Run
 
 ```bash

@@ -14,6 +14,14 @@ The second pre-registered stage adds cell-specific sensory input, stable
 302-neuron population identity, and spatially weighted coupling to that same
 runtime. It compares stimulated-versus-sham motor response over five seeds.
 
+The first dynamics result is complete and did **not** pass its landing rule.
+Actual placement reached 0.226631 median motor-response AUC versus 0.226693 for
+the best control (flat), with only 1–3/5 paired-seed wins depending on the
+control. All 302 identities were preserved. The result also exposed a c302 role
+overlap: 27 neurons are both sensory and motor, so the registered motor readout
+contains a direct-stimulation component. The failed result remains canonical;
+that limitation is not repaired post hoc.
+
 ```bash
 python -m c302_placement fetch
 python -m c302_placement run

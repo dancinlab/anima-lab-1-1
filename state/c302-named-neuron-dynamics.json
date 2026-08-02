@@ -1,0 +1,577 @@
+{
+  "arms": {
+    "actual": [
+      {
+        "motor_neurons": 147,
+        "motor_response_auc": 0.2220989288034616,
+        "motor_response_peak": 0.034489307552576065,
+        "motor_sensory_transmission": 0.42358975666959703,
+        "phi_absolute_delta_auc": 0.02289603817643003,
+        "phi_signed_delta_auc": -0.022761092842489408,
+        "population_preserved": true,
+        "seed": 302,
+        "sensory_neurons": 111,
+        "sensory_response_auc": 0.5243255421228241,
+        "sham_tension_cv": 0.016937323800349763,
+        "tension_delta_auc": 0.014923645532689989
+      },
+      {
+        "motor_neurons": 147,
+        "motor_response_auc": 0.22961415044846945,
+        "motor_response_peak": 0.03576232120394707,
+        "motor_sensory_transmission": 0.4482200279463681,
+        "phi_absolute_delta_auc": 0.028901728258530778,
+        "phi_signed_delta_auc": -0.028388418870751757,
+        "population_preserved": true,
+        "seed": 303,
+        "sensory_neurons": 111,
+        "sensory_response_auc": 0.5122799878008664,
+        "sham_tension_cv": 0.018071345701066246,
+        "tension_delta_auc": 0.015816082202945836
+      },
+      {
+        "motor_neurons": 147,
+        "motor_response_auc": 0.22663097582699265,
+        "motor_response_peak": 0.03521617874503136,
+        "motor_sensory_transmission": 0.4322171004594335,
+        "phi_absolute_delta_auc": 0.03644993023194727,
+        "phi_signed_delta_auc": 0.015331171988704498,
+        "population_preserved": true,
+        "seed": 304,
+        "sensory_neurons": 111,
+        "sensory_response_auc": 0.5243452320282813,
+        "sham_tension_cv": 0.016031968910024084,
+        "tension_delta_auc": 0.016770408270531334
+      },
+      {
+        "motor_neurons": 147,
+        "motor_response_auc": 0.22971206197689753,
+        "motor_response_peak": 0.035179778933525085,
+        "motor_sensory_transmission": 0.44285757854623453,
+        "phi_absolute_delta_auc": 0.04044450185421148,
+        "phi_signed_delta_auc": 0.04007089764918665,
+        "population_preserved": true,
+        "seed": 305,
+        "sensory_neurons": 111,
+        "sensory_response_auc": 0.5187041457684245,
+        "sham_tension_cv": 0.0170376838722523,
+        "tension_delta_auc": 0.015692047789343633
+      },
+      {
+        "motor_neurons": 147,
+        "motor_response_auc": 0.2157428426289698,
+        "motor_response_peak": 0.03296726197004318,
+        "motor_sensory_transmission": 0.41601976098891447,
+        "phi_absolute_delta_auc": 0.008076608654979216,
+        "phi_signed_delta_auc": -0.0017193891516583473,
+        "population_preserved": true,
+        "seed": 306,
+        "sensory_neurons": 111,
+        "sensory_response_auc": 0.5185879683122039,
+        "sham_tension_cv": 0.017205121425540655,
+        "tension_delta_auc": 0.01504172238492174
+      }
+    ],
+    "connection_shuffle": [
+      {
+        "motor_neurons": 147,
+        "motor_response_auc": 0.22213081576046534,
+        "motor_response_peak": 0.03449450433254242,
+        "motor_sensory_transmission": 0.42361837581160067,
+        "phi_absolute_delta_auc": 0.022717815424171648,
+        "phi_signed_delta_auc": -0.022593863092889407,
+        "population_preserved": true,
+        "seed": 302,
+        "sensory_neurons": 111,
+        "sensory_response_auc": 0.5243653921643272,
+        "sham_tension_cv": 0.01692569807623419,
+        "tension_delta_auc": 0.014906152078765444
+      },
+      {
+        "motor_neurons": 147,
+        "motor_response_auc": 0.22964075926574878,
+        "motor_response_peak": 0.0357675775885582,
+        "motor_sensory_transmission": 0.44825554280468005,
+        "phi_absolute_delta_auc": 0.029530432173700844,
+        "phi_signed_delta_auc": -0.02902657330744435,
+        "population_preserved": true,
+        "seed": 303,
+        "sensory_neurons": 111,
+        "sensory_response_auc": 0.5122987611684948,
+        "sham_tension_cv": 0.018059435431560536,
+        "tension_delta_auc": 0.015820789289136883
+      },
+      {
+        "motor_neurons": 147,
+        "motor_response_auc": 0.2265431354753673,
+        "motor_response_peak": 0.03520210087299347,
+        "motor_sensory_transmission": 0.4320518114643654,
+        "phi_absolute_delta_auc": 0.03637961899480166,
+        "phi_signed_delta_auc": 0.015180737964258895,
+        "population_preserved": true,
+        "seed": 304,
+        "sensory_neurons": 111,
+        "sensory_response_auc": 0.5243425197259057,
+        "sham_tension_cv": 0.016028871032413055,
+        "tension_delta_auc": 0.01677616496453993
+      },
+      {
+        "motor_neurons": 147,
+        "motor_response_auc": 0.2297163248003926,
+        "motor_response_peak": 0.035181451588869095,
+        "motor_sensory_transmission": 0.4428231470677583,
+        "phi_absolute_delta_auc": 0.040148558256172764,
+        "phi_signed_delta_auc": 0.03969088947680112,
+        "population_preserved": true,
+        "seed": 305,
+        "sensory_neurons": 111,
+        "sensory_response_auc": 0.5187541038030759,
+        "sham_tension_cv": 0.017031715104518307,
+        "tension_delta_auc": 0.01568302973464597
+      },
+      {
+        "motor_neurons": 147,
+        "motor_response_auc": 0.2158290828083409,
+        "motor_response_peak": 0.03297252580523491,
+        "motor_sensory_transmission": 0.4161671665905282,
+        "phi_absolute_delta_auc": 0.007972525196324277,
+        "phi_signed_delta_auc": -0.0014171321311991433,
+        "population_preserved": true,
+        "seed": 306,
+        "sensory_neurons": 111,
+        "sensory_response_auc": 0.5186115103133488,
+        "sham_tension_cv": 0.01721019142579396,
+        "tension_delta_auc": 0.015053337192512117
+      }
+    ],
+    "flat": [
+      {
+        "motor_neurons": 147,
+        "motor_response_auc": 0.22211381676606834,
+        "motor_response_peak": 0.03449418395757675,
+        "motor_sensory_transmission": 0.4236483323808796,
+        "phi_absolute_delta_auc": 0.022865585787962866,
+        "phi_signed_delta_auc": -0.022730901650682995,
+        "population_preserved": true,
+        "seed": 302,
+        "sensory_neurons": 111,
+        "sensory_response_auc": 0.52428818854969,
+        "sham_tension_cv": 0.016940004158643787,
+        "tension_delta_auc": 0.014926256117178127
+      },
+      {
+        "motor_neurons": 147,
+        "motor_response_auc": 0.22960243259149138,
+        "motor_response_peak": 0.03575718402862549,
+        "motor_sensory_transmission": 0.4482292225183931,
+        "phi_absolute_delta_auc": 0.028867873536446,
+        "phi_signed_delta_auc": -0.028377806435054997,
+        "population_preserved": true,
+        "seed": 303,
+        "sensory_neurons": 111,
+        "sensory_response_auc": 0.5122433367941994,
+        "sham_tension_cv": 0.018073470639223873,
+        "tension_delta_auc": 0.015810543663974386
+      },
+      {
+        "motor_neurons": 147,
+        "motor_response_auc": 0.22669326439790893,
+        "motor_response_peak": 0.03522711619734764,
+        "motor_sensory_transmission": 0.43227254486562433,
+        "phi_absolute_delta_auc": 0.03671827607506246,
+        "phi_signed_delta_auc": 0.01593622788493728,
+        "population_preserved": true,
+        "seed": 304,
+        "sensory_neurons": 111,
+        "sensory_response_auc": 0.5244220737367868,
+        "sham_tension_cv": 0.01602624065318653,
+        "tension_delta_auc": 0.016767631852417253
+      },
+      {
+        "motor_neurons": 147,
+        "motor_response_auc": 0.22966750492923893,
+        "motor_response_peak": 0.035176925361156464,
+        "motor_sensory_transmission": 0.44273310725330656,
+        "phi_absolute_delta_auc": 0.04037049649582357,
+        "phi_signed_delta_auc": 0.03998901660296914,
+        "population_preserved": true,
+        "seed": 305,
+        "sensory_neurons": 111,
+        "sensory_response_auc": 0.5187493349076249,
+        "sham_tension_cv": 0.017050834242367353,
+        "tension_delta_auc": 0.01568826587026706
+      },
+      {
+        "motor_neurons": 147,
+        "motor_response_auc": 0.2158173907082528,
+        "motor_response_peak": 0.03297915682196617,
+        "motor_sensory_transmission": 0.4160840864223205,
+        "phi_absolute_delta_auc": 0.008198680095230747,
+        "phi_signed_delta_auc": -0.0018355552385595705,
+        "population_preserved": true,
+        "seed": 306,
+        "sensory_neurons": 111,
+        "sensory_response_auc": 0.5186869619647041,
+        "sham_tension_cv": 0.017204605365963327,
+        "tension_delta_auc": 0.015054088005854283
+      }
+    ],
+    "position_shuffle": [
+      {
+        "motor_neurons": 147,
+        "motor_response_auc": 0.22212593525182456,
+        "motor_response_peak": 0.0344933457672596,
+        "motor_sensory_transmission": 0.42362466771758417,
+        "phi_absolute_delta_auc": 0.022921095275165716,
+        "phi_signed_delta_auc": -0.022784650884604723,
+        "population_preserved": true,
+        "seed": 302,
+        "sensory_neurons": 111,
+        "sensory_response_auc": 0.524346083169803,
+        "sham_tension_cv": 0.016951329969286524,
+        "tension_delta_auc": 0.01492406510078581
+      },
+      {
+        "motor_neurons": 147,
+        "motor_response_auc": 0.22960242508270312,
+        "motor_response_peak": 0.03576129302382469,
+        "motor_sensory_transmission": 0.4481657865038281,
+        "phi_absolute_delta_auc": 0.02896642833844937,
+        "phi_signed_delta_auc": -0.02849538623625127,
+        "population_preserved": true,
+        "seed": 303,
+        "sensory_neurons": 111,
+        "sensory_response_auc": 0.5123158259666525,
+        "sham_tension_cv": 0.01806265491455646,
+        "tension_delta_auc": 0.015807737167051528
+      },
+      {
+        "motor_neurons": 147,
+        "motor_response_auc": 0.22661391558358446,
+        "motor_response_peak": 0.03521612659096718,
+        "motor_sensory_transmission": 0.43214510165877557,
+        "phi_absolute_delta_auc": 0.03661235647127727,
+        "phi_signed_delta_auc": 0.015459239897802103,
+        "population_preserved": true,
+        "seed": 304,
+        "sensory_neurons": 111,
+        "sensory_response_auc": 0.5243931140576024,
+        "sham_tension_cv": 0.016031616921836127,
+        "tension_delta_auc": 0.01677134209603537
+      },
+      {
+        "motor_neurons": 147,
+        "motor_response_auc": 0.2297068152547581,
+        "motor_response_peak": 0.035181403160095215,
+        "motor_sensory_transmission": 0.4428166550204101,
+        "phi_absolute_delta_auc": 0.03995404796536282,
+        "phi_signed_delta_auc": 0.0395689391164028,
+        "population_preserved": true,
+        "seed": 305,
+        "sensory_neurons": 111,
+        "sensory_response_auc": 0.5187402340234257,
+        "sham_tension_cv": 0.017037496344365435,
+        "tension_delta_auc": 0.015691437511122786
+      },
+      {
+        "motor_neurons": 147,
+        "motor_response_auc": 0.21583432347688358,
+        "motor_response_peak": 0.032974738627672195,
+        "motor_sensory_transmission": 0.41613343644776307,
+        "phi_absolute_delta_auc": 0.00781779125612167,
+        "phi_signed_delta_auc": -0.001156744882279126,
+        "population_preserved": true,
+        "seed": 306,
+        "sensory_neurons": 111,
+        "sensory_response_auc": 0.5186661406478379,
+        "sham_tension_cv": 0.017207597639790597,
+        "tension_delta_auc": 0.015058697339554783
+      }
+    ],
+    "random": [
+      {
+        "motor_neurons": 147,
+        "motor_response_auc": 0.22213184194697533,
+        "motor_response_peak": 0.03449441120028496,
+        "motor_sensory_transmission": 0.4236281434972963,
+        "phi_absolute_delta_auc": 0.023092239275035346,
+        "phi_signed_delta_auc": -0.022957299320633204,
+        "population_preserved": true,
+        "seed": 302,
+        "sensory_neurons": 111,
+        "sensory_response_auc": 0.524355724133784,
+        "sham_tension_cv": 0.016948791428303335,
+        "tension_delta_auc": 0.014920629626431037
+      },
+      {
+        "motor_neurons": 147,
+        "motor_response_auc": 0.22965576831484213,
+        "motor_response_peak": 0.03576765954494476,
+        "motor_sensory_transmission": 0.4482062703031586,
+        "phi_absolute_delta_auc": 0.028747712378884963,
+        "phi_signed_delta_auc": -0.028215341800700098,
+        "population_preserved": true,
+        "seed": 303,
+        "sensory_neurons": 111,
+        "sensory_response_auc": 0.5123885664506815,
+        "sham_tension_cv": 0.018067001188777024,
+        "tension_delta_auc": 0.01583111167565221
+      },
+      {
+        "motor_neurons": 147,
+        "motor_response_auc": 0.22657709773920942,
+        "motor_response_peak": 0.03520974889397621,
+        "motor_sensory_transmission": 0.4320753729122536,
+        "phi_absolute_delta_auc": 0.036511733150626474,
+        "phi_signed_delta_auc": 0.015053569811020226,
+        "population_preserved": true,
+        "seed": 304,
+        "sensory_neurons": 111,
+        "sensory_response_auc": 0.5243925295071676,
+        "sham_tension_cv": 0.016029242587435794,
+        "tension_delta_auc": 0.016773526367614977
+      },
+      {
+        "motor_neurons": 147,
+        "motor_response_auc": 0.22976415377343073,
+        "motor_response_peak": 0.035188037902116776,
+        "motor_sensory_transmission": 0.4429110930290096,
+        "phi_absolute_delta_auc": 0.040107482955343055,
+        "phi_signed_delta_auc": 0.039749922961535844,
+        "population_preserved": true,
+        "seed": 305,
+        "sensory_neurons": 111,
+        "sensory_response_auc": 0.5187590859422926,
+        "sham_tension_cv": 0.01704246582980599,
+        "tension_delta_auc": 0.01569084537186427
+      },
+      {
+        "motor_neurons": 147,
+        "motor_response_auc": 0.21588684784364887,
+        "motor_response_peak": 0.032984498888254166,
+        "motor_sensory_transmission": 0.41625015235475177,
+        "phi_absolute_delta_auc": 0.007966544472303355,
+        "phi_signed_delta_auc": -0.0013536756255369958,
+        "population_preserved": true,
+        "seed": 306,
+        "sensory_neurons": 111,
+        "sensory_response_auc": 0.5186468920728657,
+        "sham_tension_cv": 0.017197789458889653,
+        "tension_delta_auc": 0.015059567762364168
+      }
+    ]
+  },
+  "experiment_id": "C302-NAMED-NEURON-DYNAMICS-1",
+  "protocol": {
+    "cell_dim": 8,
+    "distance_scale": 27.46838992369274,
+    "distance_scale_rule": "actual_median_connection_length",
+    "hidden_dim": 16,
+    "minimum_pairwise_wins": 4,
+    "primary_metric": "motor_response_auc",
+    "recovery_steps": 12,
+    "seeds": [
+      302,
+      303,
+      304,
+      305,
+      306
+    ],
+    "spatial_kernel": "exponential",
+    "stimulus_amplitude": 1.0,
+    "stimulus_steps": 6,
+    "warmup_steps": 12
+  },
+  "run_at": "2026-08-02T01:21:02.203013+00:00",
+  "source": {
+    "model_path": "examples/c302_C_Full.net.nml",
+    "repository": "https://github.com/openworm/c302",
+    "revision": "aad88a80aa7f217fe109a89f4b68ccb043430722",
+    "sha256": "619d714bcee72a83c056fce8a594aea791061f74f19d22c8c9da34c0656deb0c"
+  },
+  "source_experiment_id": "C302-NAMED-NEURON-PLACEMENT-1",
+  "summaries": {
+    "actual": {
+      "motor_response_auc": {
+        "mean": 0.22475979193695822,
+        "median": 0.22663097582699265
+      },
+      "motor_response_peak": {
+        "mean": 0.03472296968102455,
+        "median": 0.035179778933525085
+      },
+      "motor_sensory_transmission": {
+        "mean": 0.4325808449221095,
+        "median": 0.4322171004594335
+      },
+      "phi_absolute_delta_auc": {
+        "mean": 0.027353761435219753,
+        "median": 0.028901728258530778
+      },
+      "phi_signed_delta_auc": {
+        "mean": 0.000506633754598327,
+        "median": -0.0017193891516583473
+      },
+      "sensory_response_auc": {
+        "mean": 0.5196485752065201,
+        "median": 0.5187041457684245
+      },
+      "sham_tension_cv": {
+        "mean": 0.01705668874184661,
+        "median": 0.0170376838722523
+      },
+      "tension_delta_auc": {
+        "mean": 0.015648781236086505,
+        "median": 0.015692047789343633
+      }
+    },
+    "connection_shuffle": {
+      "motor_response_auc": {
+        "mean": 0.224772023622063,
+        "median": 0.2265431354753673
+      },
+      "motor_response_peak": {
+        "mean": 0.03472363203763962,
+        "median": 0.035181451588869095
+      },
+      "motor_sensory_transmission": {
+        "mean": 0.4325832087477865,
+        "median": 0.4320518114643654
+      },
+      "phi_absolute_delta_auc": {
+        "mean": 0.027349790009034237,
+        "median": 0.029530432173700844
+      },
+      "phi_signed_delta_auc": {
+        "mean": 0.00036681178190542255,
+        "median": -0.0014171321311991433
+      },
+      "sensory_response_auc": {
+        "mean": 0.5196744574350305,
+        "median": 0.5187541038030759
+      },
+      "sham_tension_cv": {
+        "mean": 0.01705118221410401,
+        "median": 0.017031715104518307
+      },
+      "tension_delta_auc": {
+        "mean": 0.01564789465192007,
+        "median": 0.01568302973464597
+      }
+    },
+    "flat": {
+      "motor_response_auc": {
+        "mean": 0.22477888187859207,
+        "median": 0.22669326439790893
+      },
+      "motor_response_peak": {
+        "mean": 0.034726913273334506,
+        "median": 0.035176925361156464
+      },
+      "motor_sensory_transmission": {
+        "mean": 0.4325934586881048,
+        "median": 0.43227254486562433
+      },
+      "phi_absolute_delta_auc": {
+        "mean": 0.027404182398105124,
+        "median": 0.028867873536446
+      },
+      "phi_signed_delta_auc": {
+        "mean": 0.000596196232721772,
+        "median": -0.0018355552385595705
+      },
+      "sensory_response_auc": {
+        "mean": 0.519677979190601,
+        "median": 0.5187493349076249
+      },
+      "sham_tension_cv": {
+        "mean": 0.017059031011876974,
+        "median": 0.017050834242367353
+      },
+      "tension_delta_auc": {
+        "mean": 0.01564935710193822,
+        "median": 0.01568826587026706
+      }
+    },
+    "position_shuffle": {
+      "motor_response_auc": {
+        "mean": 0.22477668292995076,
+        "median": 0.22661391558358446
+      },
+      "motor_response_peak": {
+        "mean": 0.034725381433963774,
+        "median": 0.035181403160095215
+      },
+      "motor_sensory_transmission": {
+        "mean": 0.4325771294696722,
+        "median": 0.43214510165877557
+      },
+      "phi_absolute_delta_auc": {
+        "mean": 0.02725434386127537,
+        "median": 0.02896642833844937
+      },
+      "phi_signed_delta_auc": {
+        "mean": 0.0005182794022139572,
+        "median": -0.001156744882279126
+      },
+      "sensory_response_auc": {
+        "mean": 0.5196922795730643,
+        "median": 0.5187402340234257
+      },
+      "sham_tension_cv": {
+        "mean": 0.01705813915796703,
+        "median": 0.017037496344365435
+      },
+      "tension_delta_auc": {
+        "mean": 0.015650655842910054,
+        "median": 0.015691437511122786
+      }
+    },
+    "random": {
+      "motor_response_auc": {
+        "mean": 0.2248031419236213,
+        "median": 0.22657709773920942
+      },
+      "motor_response_peak": {
+        "mean": 0.034728871285915376,
+        "median": 0.035188037902116776
+      },
+      "motor_sensory_transmission": {
+        "mean": 0.432614206419294,
+        "median": 0.4320753729122536
+      },
+      "phi_absolute_delta_auc": {
+        "mean": 0.027285142446438638,
+        "median": 0.028747712378884963
+      },
+      "phi_signed_delta_auc": {
+        "mean": 0.00045543520513715435,
+        "median": -0.0013536756255369958
+      },
+      "sensory_response_auc": {
+        "mean": 0.5197085596213583,
+        "median": 0.5187590859422926
+      },
+      "sham_tension_cv": {
+        "mean": 0.017057058098642358,
+        "median": 0.01704246582980599
+      },
+      "tension_delta_auc": {
+        "mean": 0.015655136160785333,
+        "median": 0.01569084537186427
+      }
+    }
+  },
+  "verdict": {
+    "actual_median": 0.22663097582699265,
+    "actual_to_best_control_ratio": 0.9997252297236016,
+    "best_control_median": 0.22669326439790893,
+    "landing_passed": false,
+    "pairwise_seed_wins": {
+      "connection_shuffle": 1,
+      "flat": 2,
+      "position_shuffle": 3,
+      "random": 1
+    }
+  }
+}
