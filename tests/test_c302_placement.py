@@ -200,6 +200,28 @@ def test_dynamics_protocols_share_one_canonical_ssot():
     assert phase_4.seeds == phase_3.seeds
 
 
+def test_neuromuscular_protocol_is_registered_in_canonical_ssot():
+    from c302_placement.spec import ExperimentSpec
+
+    spec = ExperimentSpec.load(
+        Path(__file__).parents[1] / "config" / "c302_named_neuron_placement.json"
+    )
+    phase_5 = spec.biophysics
+
+    assert phase_5.experiment_id == "C302-NEUROMUSCULAR-BODY-DYNAMICS-1"
+    assert phase_5.synapse_model == "neuroml_event_conductance"
+    assert phase_5.body_model == "damped_segment_chain"
+    assert phase_5.body_segments == 24
+    assert phase_5.controls == (
+        "actual_closed_loop",
+        "neural_shuffle_closed_loop",
+        "neuromuscular_shuffle_closed_loop",
+        "actual_open_loop",
+    )
+    assert phase_5.primary_metric == "touch_evoked_forward_displacement"
+    assert spec.source.include_files[0].model_path == "examples/cell_C.xml"
+
+
 def test_exclusive_motor_result_matches_registered_population():
     result = json.loads(
         (

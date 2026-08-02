@@ -6,6 +6,37 @@
     "lock_structure": true,
     "lock_population": true
   },
+  "biophysics": {
+    "default_experiment_id": "C302-NEUROMUSCULAR-BODY-DYNAMICS-1",
+    "experiments": [
+      {
+        "experiment_id": "C302-NEUROMUSCULAR-BODY-DYNAMICS-1",
+        "result_path": "state/c302-neuromuscular-body-dynamics.json",
+        "seeds": [302, 303, 304, 305, 306],
+        "controls": [
+          "actual_closed_loop",
+          "neural_shuffle_closed_loop",
+          "neuromuscular_shuffle_closed_loop",
+          "actual_open_loop"
+        ],
+        "timestep_source": "network.recommended_dt_ms",
+        "duration_source": "network.recommended_duration_ms",
+        "stimulus_component_id": "offset_current",
+        "initial_voltage_jitter_mv": 0.01,
+        "synapse_model": "neuroml_event_conductance",
+        "body_model": "damped_segment_chain",
+        "body_segments": 24,
+        "muscle_activation_slope_mv": 5.0,
+        "muscle_activation_time_constant_ms": 50.0,
+        "body_stiffness": 0.15,
+        "body_damping": 0.05,
+        "body_torque_gain": 0.001,
+        "proprioceptive_feedback_gain_pa": 0.1,
+        "primary_metric": "touch_evoked_forward_displacement",
+        "minimum_pairwise_wins": 4
+      }
+    ]
+  },
   "dynamics": {
     "default_experiment_id": "C302-EXCLUSIVE-MOTOR-DYNAMICS-1",
     "experiments": [
@@ -81,6 +112,12 @@
   "source": {
     "model_path": "examples/c302_C_Full.net.nml",
     "neuron_component_contains": "Neuron",
+    "include_files": [
+      {
+        "model_path": "examples/cell_C.xml",
+        "sha256": "268567c72ca409552f93c786c40f061bfdd900af34defaef417e45ffa6659ab4"
+      }
+    ],
     "repository": "https://github.com/openworm/c302",
     "revision": "aad88a80aa7f217fe109a89f4b68ccb043430722",
     "sha256": "619d714bcee72a83c056fce8a594aea791061f74f19d22c8c9da34c0656deb0c"

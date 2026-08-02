@@ -236,6 +236,59 @@ this registered runtime approximation, not the biological connectome.
 
 Canonical result: `state/c302-signed-synapse-dynamics.json`.
 
+## Phase 5 preregistration: conductance cells, muscles, and body loop
+
+`C302-NEUROMUSCULAR-BODY-DYNAMICS-1` is registered before its first result.
+It replaces the Anima GRU substrate for this experiment with an explicit
+conductance runtime and imports the complete pinned c302 C model: 302 named
+neurons, 95 body-wall muscles, neuron-neuron and neuron-muscle projections,
+cell morphology, capacitance, initial membrane potential, spike threshold,
+channel densities, channel gates, calcium pool, synaptic conductance, the
+source pulse generator, and its declared input targets. The included
+`cell_C.xml` is fetched from the same immutable upstream revision and verified
+by the checksum in the existing JSON SSOT.
+
+The source does **not** declare one membrane model per named neuron. All 302
+neurons use `GenericNeuronCell`, while all muscles use `GenericMuscleCell`.
+This phase therefore tests source-declared component biophysics, not invented
+neuron-level diversity. The runtime follows NeuroML's channel-density current,
+fixed-tau sigmoid HH gates, fixed-factor calcium pool, event conductance
+synapses, and electrical coupling equations. Its timestep and duration are
+read from the network's `recommended_dt_ms` and `recommended_duration_ms`
+properties rather than duplicated in the experiment configuration.
+
+c302 does not contain an environmental body solver. The registered extension
+is consequently a narrow `damped_segment_chain`: the 95 canonical MDL/MDR/MVL/
+MVR identities map to their numeric 24 body segments, dorsal-minus-ventral
+muscle activation drives segment curvature, and body strain feeds back only to
+the source-declared stimulus input population. Every non-source body parameter
+is explicit in the JSON SSOT. This layer is an experimental body approximation,
+not an OpenWorm biomechanics claim.
+
+Four paired controls are fixed before execution:
+
+1. `actual_closed_loop`: canonical neural and neuromuscular edges with strain
+   feedback.
+2. `neural_shuffle_closed_loop`: synapse-specific neuron-neuron degrees are
+   preserved while partners are rewired; neuromuscular edges stay canonical.
+3. `neuromuscular_shuffle_closed_loop`: neuron-neuron edges stay canonical while
+   source and target degrees of neuron-muscle projections are preserved under
+   rewiring.
+4. `actual_open_loop`: canonical edges and body, but strain-to-sensory feedback
+   is disabled.
+
+The source pulse and a zero-pulse sham begin from cloned states with the same
+seeded 0.01 mV initial-voltage jitter. The primary metric is sham-subtracted
+forward displacement at the source-declared duration. The result lands only if
+`actual_closed_loop` has a higher median than every control, wins at least four
+of five paired seeds against each, all 397 cells remain finite, and both edge
+shuffles preserve their registered degree invariants. Muscle contrast,
+curvature, traveling-wave coherence, membrane bounds, and spike/event counts
+are secondary diagnostics and cannot rescue a failed primary result.
+
+Canonical result target: `state/c302-neuromuscular-body-dynamics.json`. No
+phase 5 result had been generated when this protocol was registered.
+
 ## Run
 
 ```bash

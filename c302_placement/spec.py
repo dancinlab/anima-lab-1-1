@@ -10,19 +10,29 @@ from urllib.request import urlopen
 
 
 @dataclass(frozen=True, slots=True)
+class SourceArtifactSpec:
+    model_path: str
+    sha256: str
+
+
+@dataclass(frozen=True, slots=True)
 class SourceSpec:
     repository: str
     revision: str
     model_path: str
     sha256: str
     neuron_component_contains: str
+    include_files: tuple[SourceArtifactSpec, ...] = ()
 
     @property
     def download_url(self) -> str:
+        return self.artifact_url(self.model_path)
+
+    def artifact_url(self, model_path: str) -> str:
         repository_path = self.repository.removeprefix(
             "https://github.com/"
         ).removesuffix(".git")
-        return f"https://raw.githubusercontent.com/{repository_path}/{self.revision}/{self.model_path}"
+        return f"https://raw.githubusercontent.com/{repository_path}/{self.revision}/{model_path}"
 
 
 @dataclass(frozen=True, slots=True)
@@ -57,6 +67,29 @@ class DynamicsSpec:
 
 
 @dataclass(frozen=True, slots=True)
+class BiophysicsSpec:
+    experiment_id: str
+    result_path: str
+    seeds: tuple[int, ...]
+    controls: tuple[str, ...]
+    timestep_source: str
+    duration_source: str
+    stimulus_component_id: str
+    initial_voltage_jitter_mv: float
+    synapse_model: str
+    body_model: str
+    body_segments: int
+    muscle_activation_slope_mv: float
+    muscle_activation_time_constant_ms: float
+    body_stiffness: float
+    body_damping: float
+    body_torque_gain: float
+    proprioceptive_feedback_gain_pa: float
+    primary_metric: str
+    minimum_pairwise_wins: int
+
+
+@dataclass(frozen=True, slots=True)
 class ExperimentSpec:
     experiment_id: str
     seed: int
@@ -66,6 +99,8 @@ class ExperimentSpec:
     runtime: RuntimeSpec
     default_dynamics_experiment_id: str
     dynamics_experiments: tuple[DynamicsSpec, ...]
+    default_biophysics_experiment_id: str
+    biophysics_experiments: tuple[BiophysicsSpec, ...]
 
     @classmethod
     def load(cls, path: Path) -> ExperimentSpec:
@@ -92,19 +127,44 @@ class ExperimentSpec:
             )
             for experiment in dynamics["experiments"]
         )
+        biophysics = raw["biophysics"]
+        biophysics_experiments = tuple(
+            BiophysicsSpec(
+                **{
+                    **experiment,
+                    "seeds": tuple(int(seed) for seed in experiment["seeds"]),
+                    "controls": tuple(experiment["controls"]),
+                }
+            )
+            for experiment in biophysics["experiments"]
+        )
+        source = raw["source"]
         spec = cls(
             experiment_id=raw["experiment_id"],
             seed=int(raw["seed"]),
             variants=tuple(raw["variants"]),
             rewiring_swaps_per_edge=float(raw["rewiring_swaps_per_edge"]),
-            source=SourceSpec(**raw["source"]),
+            source=SourceSpec(
+                **{
+                    **source,
+                    "include_files": tuple(
+                        SourceArtifactSpec(**artifact)
+                        for artifact in source.get("include_files", [])
+                    ),
+                }
+            ),
             runtime=RuntimeSpec(**raw["runtime"]),
             default_dynamics_experiment_id=dynamics[
                 "default_experiment_id"
             ],
             dynamics_experiments=experiments,
+            default_biophysics_experiment_id=biophysics[
+                "default_experiment_id"
+            ],
+            biophysics_experiments=biophysics_experiments,
         )
         spec.dynamics_for()
+        spec.biophysics_for()
         return spec
 
     @property
@@ -121,6 +181,23 @@ class ExperimentSpec:
         ]
         if len(matches) != 1:
             raise ValueError(f"unknown or duplicate dynamics experiment: {selected}")
+        return matches[0]
+
+    @property
+    def biophysics(self) -> BiophysicsSpec:
+        return self.biophysics_for()
+
+    def biophysics_for(self, experiment_id: str | None = None) -> BiophysicsSpec:
+        selected = experiment_id or self.default_biophysics_experiment_id
+        matches = [
+            experiment
+            for experiment in self.biophysics_experiments
+            if experiment.experiment_id == selected
+        ]
+        if len(matches) != 1:
+            raise ValueError(
+                f"unknown or duplicate biophysics experiment: {selected}"
+            )
         return matches[0]
 
     def fetch(self, destination: Path) -> Path:
