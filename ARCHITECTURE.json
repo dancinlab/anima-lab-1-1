@@ -153,7 +153,7 @@
             "name": "runtime dynamics",
             "role": "감각 뉴런 자극에서 운동 뉴런 응답까지 paired sham 측정",
             "id": "c302-runtime-dynamics",
-            "detail": "기존 ConsciousnessEngine의 cell_inputs API와 공간 exponential coupling을 사용한다. actual과 4개 통제군을 seeds 302-306에서 비교했다. 사전등록 주 지표는 실패했다(actual 0.226631, best control flat 0.226693, paired wins 1-3/5). 302개 identity는 전 군에서 보존됐다. 감각·운동 역할이 겹치는 27개 뉴런의 직접 반응이 주 지표에 포함된 측정 한계가 확인됐으며 phase 2 결과는 사후 수정하지 않는다."
+            "detail": "기존 ConsciousnessEngine의 cell_inputs API와 공간 exponential coupling을 사용한다. phase 2 all-motor 지표는 실패했다(actual 0.226631, best flat 0.226693). phase 3은 SSOT 역할 selector로 감각 역할이 겹치는 27개를 제외한 120개 pure-motor만 읽었으며 역시 실패했다(actual 0.000735, best connection shuffle 0.000947, paired wins 0-2/5). 반응은 phase 2 대비 99.68% 감소해 직접 자극 지배를 확인했다. 두 phase 모두 5개 군 x 5 seeds와 302개 identity를 보존하며, 사후 지표 변경 없이 별도 canonical 결과로 유지한다."
           }
         ]
       },

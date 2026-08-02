@@ -137,8 +137,37 @@ preserve 302 cells. Phase 2 remains immutable evidence; phase 3 neither replaces
 nor rescues its failed verdict. This phase isolates topology-mediated runtime
 transmission, but still does not reproduce membrane biophysics or muscles.
 
-Canonical result target: `state/c302-exclusive-motor-dynamics.json`. No result
-had been generated when this protocol was registered.
+The canonical result target was registered as
+`state/c302-exclusive-motor-dynamics.json`. No result had been generated when
+the protocol landed in commit `4fff9db`.
+
+## Phase 3 result
+
+All 25 arm/seed combinations completed with 111 stimulated sensory neurons,
+120 exclusive-motor readout neurons, and all 302 named cells preserved. A
+second complete run reproduced every field after excluding the timestamp.
+
+| arm | median exclusive-motor response AUC | actual paired wins |
+|---|---:|---:|
+| actual | 0.000735326 | — |
+| connection shuffle | 0.000947304 | 0/5 |
+| flat | 0.000843947 | 2/5 |
+| position shuffle | 0.000778714 | 1/5 |
+| random | 0.000822533 | 1/5 |
+
+**Verdict: failed.** Actual/best-control is 0.776230, and no paired comparison
+reaches 4/5 wins. The canonical c302 placement is therefore not advantageous
+under this runtime protocol; the degree-preserving connection shuffle has the
+highest median topology-mediated response.
+
+The actual-arm median retains only 0.324% of phase 2's all-motor readout, a
+99.68% decrease. The populations differ, so this ratio is diagnostic rather
+than a new landing criterion, but its scale confirms that the 27 directly
+stimulated dual-role neurons dominated phase 2. Phase 3 successfully isolates
+a nonzero propagated response and shows that the imported runtime topology
+carries signal; it does not show an advantage for the biological arrangement.
+
+Canonical result: `state/c302-exclusive-motor-dynamics.json`.
 
 ## Run
 

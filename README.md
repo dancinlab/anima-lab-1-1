@@ -25,7 +25,10 @@ that limitation is not repaired post hoc.
 The third pre-registered stage keeps the sensory stimulus but reads only the 120
 motor neurons without a sensory role. This removes all 27 directly stimulated
 dual-role neurons from the primary metric while reusing the canonical dynamics
-engine and SSOT. Its result is not yet generated.
+engine and SSOT. The result also failed: actual placement reached 0.000735
+median exclusive-motor response AUC versus 0.000947 for the degree-preserving
+connection shuffle. Removing the dual-role cells reduced the actual-arm median
+by 99.68%, confirming that the phase 2 readout was dominated by direct input.
 
 ```bash
 python -m c302_placement fetch

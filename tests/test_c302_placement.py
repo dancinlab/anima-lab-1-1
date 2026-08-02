@@ -1,4 +1,5 @@
 import copy
+import json
 import random
 from pathlib import Path
 
@@ -91,6 +92,30 @@ def test_dynamics_protocols_share_one_canonical_ssot():
     assert phase_2.readout_exclude_roles == ()
     assert phase_3.readout_exclude_roles == ("sensory",)
     assert phase_2.seeds == phase_3.seeds
+
+
+def test_exclusive_motor_result_matches_registered_population():
+    result = json.loads(
+        (
+            Path(__file__).parents[1]
+            / "state"
+            / "c302-exclusive-motor-dynamics.json"
+        ).read_text(encoding="utf-8")
+    )
+
+    assert result["experiment_id"] == "C302-EXCLUSIVE-MOTOR-DYNAMICS-1"
+    assert result["protocol"]["readout_include_roles"] == ["motor"]
+    assert result["protocol"]["readout_exclude_roles"] == ["sensory"]
+    assert {
+        row["readout_neurons"]
+        for arm in result["arms"].values()
+        for row in arm
+    } == {120}
+    assert {
+        row["stimulus_neurons"]
+        for arm in result["arms"].values()
+        for row in arm
+    } == {111}
 
 
 def test_runtime_binding_locks_named_topology():

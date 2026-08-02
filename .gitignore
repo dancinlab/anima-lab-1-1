@@ -8,6 +8,7 @@ __pycache__/
 !config/c302_named_neuron_placement.json
 !state/c302-named-neuron-placement.json
 !state/c302-named-neuron-dynamics.json
+!state/c302-exclusive-motor-dynamics.json
 *.pt
 *.pyc
 vad-rs/target/
