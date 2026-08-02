@@ -1,0 +1,23 @@
+{
+  "experiment_id": "C302-NAMED-NEURON-PLACEMENT-1",
+  "rewiring_swaps_per_edge": 1.0,
+  "runtime": {
+    "coupling_normalization": "incoming_sum",
+    "lock_structure": true
+  },
+  "seed": 302,
+  "source": {
+    "model_path": "examples/c302_C_Full.net.nml",
+    "neuron_component_contains": "Neuron",
+    "repository": "https://github.com/openworm/c302",
+    "revision": "aad88a80aa7f217fe109a89f4b68ccb043430722",
+    "sha256": "619d714bcee72a83c056fce8a594aea791061f74f19d22c8c9da34c0656deb0c"
+  },
+  "variants": [
+    "actual",
+    "position_shuffle",
+    "connection_shuffle",
+    "flat",
+    "random"
+  ]
+}

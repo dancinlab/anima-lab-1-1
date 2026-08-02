@@ -5,6 +5,8 @@ __pycache__/
 *.json
 # design SSOT -- must be tracked despite the *.json rule above
 !ARCHITECTURE.json
+!config/c302_named_neuron_placement.json
+!state/c302-named-neuron-placement.json
 *.pt
 *.pyc
 vad-rs/target/
@@ -21,3 +23,6 @@ knowledge-rs/target/
 # built training corpora (regenerate with build_corpus.py)
 data/corpus_v3.txt
 data/corpus_v3_arith.txt
+
+# External canonical sources are fetched from pinned revisions.
+.cache/c302/

@@ -139,6 +139,9 @@ class CellState:
     creation_step: int = 0
     parent_id: Optional[int] = None
     faction_id: int = 0
+    external_id: Optional[str] = None
+    cell_type: Optional[str] = None
+    position: Optional[Tuple[float, float, float]] = None
 
     @property
     def avg_tension(self) -> float:
@@ -217,6 +220,8 @@ class ConsciousnessEngine:
 
         # Coupling matrix (Hebbian, grows with cells)
         self._coupling: Optional[torch.Tensor] = None
+        # Canonical topologies may lock plasticity to observed edges.
+        self._coupling_mask: Optional[torch.Tensor] = None
 
         # Φ Ratchet state
         self._best_phi = 0.0
@@ -376,6 +381,51 @@ class ConsciousnessEngine:
         m = min(old_n, new_n)
         new_coupling[:m, :m] = self._coupling[:m, :m]
         self._coupling = new_coupling
+        if self._coupling_mask is not None:
+            new_mask = torch.zeros(new_n, new_n, dtype=torch.bool)
+            new_mask[:m, :m] = self._coupling_mask[:m, :m]
+            self._coupling_mask = new_mask
+
+    def configure_topology(
+        self,
+        coupling: torch.Tensor,
+        cell_metadata: List[Dict],
+        lock_structure: bool = True,
+    ) -> None:
+        """Bind stable cell identities and an incoming coupling matrix.
+
+        ``coupling[target, source]`` is the influence of the source cell on the
+        target cell. Values must already be normalized to [-1, 1]. When locked,
+        Hebbian learning can update observed weights but cannot invent edges.
+        """
+        matrix = torch.as_tensor(coupling, dtype=torch.float32)
+        expected_shape = (self.n_cells, self.n_cells)
+        if tuple(matrix.shape) != expected_shape:
+            raise ValueError(
+                f"topology shape {tuple(matrix.shape)} does not match {expected_shape}"
+            )
+        if len(cell_metadata) != self.n_cells:
+            raise ValueError("cell metadata count must match the runtime population")
+        if not torch.isfinite(matrix).all():
+            raise ValueError("topology contains a non-finite coupling")
+        if matrix.abs().max().item() > 1.0:
+            raise ValueError("topology couplings must be normalized to [-1, 1]")
+        if torch.diagonal(matrix).abs().max().item() > 0.0:
+            raise ValueError("self-coupling is not supported")
+
+        external_ids = [metadata.get("external_id") for metadata in cell_metadata]
+        if any(not external_id for external_id in external_ids):
+            raise ValueError("every topology cell requires an external_id")
+        if len(external_ids) != len(set(external_ids)):
+            raise ValueError("topology external_id values must be unique")
+
+        self._coupling = matrix.detach().clone()
+        self._coupling_mask = self._coupling.ne(0) if lock_structure else None
+        for state, metadata in zip(self.cell_states, cell_metadata):
+            state.external_id = metadata["external_id"]
+            state.cell_type = metadata.get("cell_type")
+            position = metadata.get("position")
+            state.position = tuple(position) if position is not None else None
 
     @property
     def n_cells(self) -> int:
@@ -550,6 +600,8 @@ class ConsciousnessEngine:
         normed = outputs / norms
         sim = normed @ normed.T  # [n, n]
         self._coupling = (self._coupling + lr * sim).clamp(-1, 1)
+        if self._coupling_mask is not None:
+            self._coupling = self._coupling * self._coupling_mask
         # Zero diagonal
         self._coupling.fill_diagonal_(0)
 
@@ -858,6 +910,9 @@ class ConsciousnessEngine:
                     'faction': s.faction_id,
                     'avg_tension': s.avg_tension,
                     'parent_id': s.parent_id,
+                    'external_id': s.external_id,
+                    'cell_type': s.cell_type,
+                    'position': s.position,
                 }
                 for s in self.cell_states
             ],

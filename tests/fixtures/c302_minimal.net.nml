@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<neuroml xmlns="http://www.neuroml.org/schema/neuroml2" id="fixture">
+  <network id="fixture_network">
+    <population id="SENS" component="GenericNeuronCell" size="1" type="populationList">
+      <property tag="type" value="sensory"/>
+      <instance id="0"><location x="0" y="0" z="0"/></instance>
+    </population>
+    <population id="INT" component="GenericNeuronCell" size="1" type="populationList">
+      <property tag="type" value="interneuron"/>
+      <instance id="0"><location x="1" y="1" z="1"/></instance>
+    </population>
+    <population id="MOTOR" component="GenericNeuronCell" size="1" type="populationList">
+      <property tag="type" value="motor"/>
+      <instance id="0"><location x="2" y="2" z="2"/></instance>
+    </population>
+    <population id="MUSCLE" component="GenericMuscleCell" size="1" type="populationList">
+      <property tag="type" value="muscle"/>
+      <instance id="0"><location x="3" y="3" z="3"/></instance>
+    </population>
+    <projection id="chem_1" presynapticPopulation="SENS" postsynapticPopulation="INT" synapse="exc">
+      <connectionWD id="0" preCellId="../SENS/0/GenericNeuronCell" postCellId="../INT/0/GenericNeuronCell" weight="2" delay="0ms"/>
+    </projection>
+    <projection id="muscle_1" presynapticPopulation="MOTOR" postsynapticPopulation="MUSCLE" synapse="exc">
+      <connectionWD id="0" preCellId="../MOTOR/0/GenericNeuronCell" postCellId="../MUSCLE/0/GenericMuscleCell" weight="1" delay="0ms"/>
+    </projection>
+    <electricalProjection id="gap_1" presynapticPopulation="INT" postsynapticPopulation="MOTOR">
+      <electricalConnectionInstanceW id="0" preCell="../INT/0/GenericNeuronCell" postCell="../MOTOR/0/GenericNeuronCell" synapse="gap" weight="3"/>
+    </electricalProjection>
+  </network>
+</neuroml>

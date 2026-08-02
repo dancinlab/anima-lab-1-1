@@ -1,0 +1,128 @@
+{
+  "experiment_id": "C302-NAMED-NEURON-PLACEMENT-1",
+  "run_at": "2026-08-02T00:46:17.409877+00:00",
+  "seed": 302,
+  "source": {
+    "model_path": "examples/c302_C_Full.net.nml",
+    "repository": "https://github.com/openworm/c302",
+    "revision": "aad88a80aa7f217fe109a89f4b68ccb043430722",
+    "sha256": "619d714bcee72a83c056fce8a594aea791061f74f19d22c8c9da34c0656deb0c"
+  },
+  "variants": {
+    "actual": {
+      "connection_kinds": {
+        "chemical": 2279,
+        "electrical": 1084
+      },
+      "connection_weight": 8312.0,
+      "connections": 3363,
+      "degree_signature_preserved": true,
+      "mean_connection_length": 144.36239635384496,
+      "median_sensory_motor_hops": 3.0,
+      "neuron_types": {
+        "interneuron": 69,
+        "interneuron; motor": 26,
+        "interneuron; motor; sensory": 6,
+        "interneuron; sensory": 18,
+        "motor": 94,
+        "motor; sensory": 21,
+        "sensory": 66,
+        "unknown": 2
+      },
+      "neurons": 302,
+      "sensory_motor_reachability": 0.9931972789115646
+    },
+    "connection_shuffle": {
+      "connection_kinds": {
+        "chemical": 2279,
+        "electrical": 1084
+      },
+      "connection_weight": 8312.0,
+      "connections": 3363,
+      "degree_signature_preserved": true,
+      "mean_connection_length": 209.7181794464734,
+      "median_sensory_motor_hops": 2.0,
+      "neuron_types": {
+        "interneuron": 69,
+        "interneuron; motor": 26,
+        "interneuron; motor; sensory": 6,
+        "interneuron; sensory": 18,
+        "motor": 94,
+        "motor; sensory": 21,
+        "sensory": 66,
+        "unknown": 2
+      },
+      "neurons": 302,
+      "sensory_motor_reachability": 0.9931972789115646
+    },
+    "flat": {
+      "connection_kinds": {
+        "chemical": 2279,
+        "electrical": 1084
+      },
+      "connection_weight": 8312.0,
+      "connections": 3363,
+      "degree_signature_preserved": true,
+      "mean_connection_length": 186.59458006466699,
+      "median_sensory_motor_hops": 3.0,
+      "neuron_types": {
+        "interneuron": 69,
+        "interneuron; motor": 26,
+        "interneuron; motor; sensory": 6,
+        "interneuron; sensory": 18,
+        "motor": 94,
+        "motor; sensory": 21,
+        "sensory": 66,
+        "unknown": 2
+      },
+      "neurons": 302,
+      "sensory_motor_reachability": 0.9931972789115646
+    },
+    "position_shuffle": {
+      "connection_kinds": {
+        "chemical": 2279,
+        "electrical": 1084
+      },
+      "connection_weight": 8312.0,
+      "connections": 3363,
+      "degree_signature_preserved": true,
+      "mean_connection_length": 248.5617244323815,
+      "median_sensory_motor_hops": 3.0,
+      "neuron_types": {
+        "interneuron": 69,
+        "interneuron; motor": 26,
+        "interneuron; motor; sensory": 6,
+        "interneuron; sensory": 18,
+        "motor": 94,
+        "motor; sensory": 21,
+        "sensory": 66,
+        "unknown": 2
+      },
+      "neurons": 302,
+      "sensory_motor_reachability": 0.9931972789115646
+    },
+    "random": {
+      "connection_kinds": {
+        "chemical": 2279,
+        "electrical": 1084
+      },
+      "connection_weight": 8312.0,
+      "connections": 3363,
+      "degree_signature_preserved": true,
+      "mean_connection_length": 259.4755376269314,
+      "median_sensory_motor_hops": 3.0,
+      "neuron_types": {
+        "interneuron": 69,
+        "interneuron; motor": 26,
+        "interneuron; motor; sensory": 6,
+        "interneuron; sensory": 18,
+        "motor": 94,
+        "motor; sensory": 21,
+        "sensory": 66,
+        "unknown": 2
+      },
+      "neurons": 302,
+      "sensory_motor_reachability": 0.9931972789115646
+    }
+  }
+}

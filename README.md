@@ -1,4 +1,19 @@
-> ⏳ **과거 시점 스냅샷 저장소** — 이 repo는 특정 커밋 시점을 그대로 떠 놓은 것으로, 현재 개발본이 아닙니다.
+# Anima Lab 1-1 — C302 Named Neuron Placement
+
+This public research repository extends `anima-lab-1` with a canonical
+OpenWorm c302/NeuroML adapter and pre-registered named-neuron placement
+controls. Start with [the experiment card](docs/C302-NAMED-NEURON-PLACEMENT.md).
+
+The imported model is pinned and checksum-verified; upstream data is not
+vendored or manually duplicated. The first preflight compares actual,
+position-shuffled, degree-preserving connection-shuffled, flat, and random 3D
+placements while preserving stable neuron identities.
+The same canonical model can be bound into `ConsciousnessEngine`; its structural
+mask keeps Hebbian learning on observed edges instead of densifying the graph.
+
+---
+
+> ⏳ **기반 시점 기록** — 아래 내용은 이 연구 분기 생성 당시 상속한 `anima-lab-1` 기록입니다.
 > - **시점**: `d85f5f8ea` · 2026-03-30 18:48:28 +0900 (KST)
 > - **커밋**: `docs: add Laws 80-88 — v13 H100 training discoveries`
 > - **의미**: `.clm v2`(CLM 2세대) H100 학습 스윕(sweep) 시기 — v2 최적 config를 처음 확정하던 무렵

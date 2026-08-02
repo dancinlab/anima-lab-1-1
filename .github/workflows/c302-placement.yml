@@ -1,0 +1,21 @@
+name: c302 placement
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install numpy pytest torch
+      - run: python -m c302_placement run
+      - run: pytest -q tests/test_c302_placement.py
