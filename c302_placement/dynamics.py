@@ -73,6 +73,8 @@ def _run_arm(
         lock_population=spec.runtime.lock_population,
         spatial_kernel=dynamics.spatial_kernel,
         distance_scale=reference_distance_scale,
+        synapse_model=dynamics.synapse_model,
+        runtime_timestep_ms=dynamics.runtime_timestep_ms,
     )
 
     zero = torch.zeros(len(connectome.neurons), dynamics.cell_dim)
@@ -180,6 +182,24 @@ def _summarize(seed_results: list[dict]) -> dict:
     }
 
 
+def _synapse_manifest(connectome: Connectome) -> list[dict]:
+    counts: dict[str, int] = {}
+    for edge in connectome.connections:
+        counts[edge.synapse] = counts.get(edge.synapse, 0) + 1
+    return [
+        {
+            "mechanism_id": mechanism.mechanism_id,
+            "kind": mechanism.kind,
+            "connection_count": counts[mechanism.mechanism_id],
+            "reversal_potential_mv": mechanism.reversal_potential_mv,
+            "rise_time_ms": mechanism.rise_time_ms,
+            "decay_time_ms": mechanism.decay_time_ms,
+        }
+        for mechanism in connectome.synapse_mechanisms
+        if mechanism.mechanism_id in counts
+    ]
+
+
 def run_dynamics(
     spec_path: Path,
     source_path: Path,
@@ -253,6 +273,10 @@ def run_dynamics(
             "spatial_kernel": dynamics.spatial_kernel,
             "distance_scale_rule": dynamics.distance_scale,
             "distance_scale": distance_scale,
+            "synapse_model": dynamics.synapse_model,
+            "runtime_timestep_ms": dynamics.runtime_timestep_ms,
+            "resting_potential_mv": actual.resting_potential_mv,
+            "synapse_channels": _synapse_manifest(actual),
             "stimulus_include_roles": list(dynamics.stimulus_include_roles),
             "stimulus_exclude_roles": list(dynamics.stimulus_exclude_roles),
             "readout_include_roles": list(dynamics.readout_include_roles),

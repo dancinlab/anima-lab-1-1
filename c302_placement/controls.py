@@ -63,11 +63,29 @@ def degree_signature(connectome: Connectome) -> dict[str, tuple[int, int, int]]:
     return {neuron_id: tuple(counts) for neuron_id, counts in signature.items()}
 
 
+def synapse_degree_signature(
+    connectome: Connectome,
+) -> dict[tuple[str, str], tuple[int, int, int]]:
+    signature = {
+        (neuron.neuron_id, mechanism.mechanism_id): [0, 0, 0]
+        for neuron in connectome.neurons
+        for mechanism in connectome.synapse_mechanisms
+    }
+    for edge in connectome.connections:
+        if edge.directed:
+            signature[(edge.source, edge.synapse)][0] += 1
+            signature[(edge.target, edge.synapse)][1] += 1
+        else:
+            signature[(edge.source, edge.synapse)][2] += 1
+            signature[(edge.target, edge.synapse)][2] += 1
+    return {key: tuple(counts) for key, counts in signature.items()}
+
+
 def rewire_connections(
     connectome: Connectome, rng: random.Random, swaps_per_edge: float
 ) -> Connectome:
     edges = list(connectome.connections)
-    occupied = {(edge.kind, edge.source, edge.target) for edge in edges}
+    occupied = {(edge.synapse, edge.source, edge.target) for edge in edges}
     target_swaps = round(len(edges) * swaps_per_edge)
     accepted = 0
     attempts = 0
@@ -75,7 +93,7 @@ def rewire_connections(
         attempts += 1
         left_index, right_index = rng.sample(range(len(edges)), 2)
         left, right = edges[left_index], edges[right_index]
-        if left.kind != right.kind or left.directed != right.directed:
+        if left.synapse != right.synapse or left.directed != right.directed:
             continue
         if left.directed:
             new_left = (left.source, right.target)
@@ -88,10 +106,10 @@ def rewire_connections(
             new_left = tuple(sorted((left_nodes[0], right_nodes[1])))
             new_right = tuple(sorted((right_nodes[0], left_nodes[1])))
         old_keys = {
-            (left.kind, left.source, left.target),
-            (right.kind, right.source, right.target),
+            (left.synapse, left.source, left.target),
+            (right.synapse, right.source, right.target),
         }
-        new_keys = {(left.kind, *new_left), (right.kind, *new_right)}
+        new_keys = {(left.synapse, *new_left), (right.synapse, *new_right)}
         if any(source == target for source, target in (new_left, new_right)):
             continue
         if len(new_keys) != 2 or any(key in occupied - old_keys for key in new_keys):
@@ -108,6 +126,10 @@ def rewire_connections(
     rewired = replace(connectome, connections=tuple(edges))
     if degree_signature(rewired) != degree_signature(connectome):
         raise AssertionError("degree-preserving rewiring changed a degree")
+    if connectome.synapse_mechanisms and (
+        synapse_degree_signature(rewired) != synapse_degree_signature(connectome)
+    ):
+        raise AssertionError("rewiring changed a synapse-specific degree")
     rewired.validate()
     return rewired
 

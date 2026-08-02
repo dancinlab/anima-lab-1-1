@@ -187,6 +187,8 @@ definition. Electrical coupling is diffusive rather than a second positive
 chemical edge. The registered runtime timestep is 1 ms; this is a channel
 filter approximation inside the canonical GRU runtime, not a claim to execute
 the full NeuroML membrane model.
+The implementation follows NeuroML's published `expTwoSynapse` state equations
+and peak normalization: <https://docs.neuroml.org/Userdocs/Schemas/Synapses.html>.
 
 All other causal controls remain phase 3's: the pinned 302-neuron source, five
 placement/topology arms, seeds 302-306, sensory stimulation, 120 exclusive-motor
@@ -202,6 +204,38 @@ because membrane voltage, ion channels, muscles, and environment remain absent.
 Canonical result target: `state/c302-signed-synapse-dynamics.json`. No result
 had been generated when this protocol was registered.
 
+## Phase 4 result
+
+The protocol was fixed in commit `c2eefe5` before any phase 4 result existed.
+All 25 arm/seed combinations then completed with 111 stimulated sensory
+neurons, 120 exclusive-motor readout neurons, and all 302 identities preserved.
+The generated result records 2,079 excitatory chemical, 200 inhibitory
+chemical, and 1,084 electrical connections and their source-declared channel
+parameters. A second complete execution reproduced every arm, summary, and
+verdict field exactly.
+
+| arm | median exclusive-motor response AUC | actual paired wins |
+|---|---:|---:|
+| actual | 0.003110961 | — |
+| connection shuffle | 0.005236299 | 0/5 |
+| flat | 0.007967511 | 0/5 |
+| position shuffle | 0.004867838 | 0/5 |
+| random | 0.005575627 | 0/5 |
+
+**Verdict: failed.** Actual/best-control is 0.390456, below the required
+greater-than-one median ratio, and every paired comparison misses the required
+4/5 wins. The signed/filter/diffusive channel package therefore does not rescue
+the canonical c302 arrangement in the present homogeneous GRU substrate.
+
+Phase 4 also uses a longer warmup and recovery window, so its absolute AUC and
+ratio cannot be interpreted as a controlled ablation against phase 3. The
+remaining mechanistic gap is explicit: all 302 neurons still share one GRU cell
+model, and the experiment has no membrane voltage, ion-channel diversity,
+muscles, body, sensory organ, or environmental feedback. The result rejects
+this registered runtime approximation, not the biological connectome.
+
+Canonical result: `state/c302-signed-synapse-dynamics.json`.
+
 ## Run
 
 ```bash
@@ -209,5 +243,6 @@ python -m c302_placement fetch
 python -m c302_placement run
 python -m c302_placement dynamics
 python -m c302_placement dynamics --experiment-id C302-NAMED-NEURON-DYNAMICS-1
+python -m c302_placement dynamics --experiment-id C302-SIGNED-SYNAPSE-DYNAMICS-1
 pytest -q tests/test_c302_placement.py
 ```

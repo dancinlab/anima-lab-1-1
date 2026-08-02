@@ -22,3 +22,4 @@ jobs:
       - run: pytest -q tests/test_c302_placement.py
       - run: python -m c302_placement dynamics --experiment-id C302-NAMED-NEURON-DYNAMICS-1 --output /tmp/c302-dynamics.json
       - run: python -m c302_placement dynamics --experiment-id C302-EXCLUSIVE-MOTOR-DYNAMICS-1 --output /tmp/c302-exclusive-motor.json
+      - run: python -m c302_placement dynamics --experiment-id C302-SIGNED-SYNAPSE-DYNAMICS-1 --output /tmp/c302-signed-synapse.json

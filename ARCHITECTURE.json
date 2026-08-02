@@ -129,7 +129,7 @@
         "name": "c302 named-neuron topology",
         "role": "canonical NeuroML 입력을 런타임 세포 배선으로 승격",
         "id": "c302-named-neuron-topology",
-        "detail": "config/c302_named_neuron_placement.json이 revision·checksum·seed·통제군·정규화·동역학 프로토콜의 SSOT다. c302_placement는 302개 이름·종류·좌표와 chemical/electrical edge를 보존하고, ConsciousnessEngine.configure_topology는 coupling[target,source], structural mask, stable population lock을 적용한다.",
+        "detail": "config/c302_named_neuron_placement.json이 revision·checksum·seed·통제군·정규화·동역학 프로토콜의 SSOT다. c302_placement는 302개 이름·종류·좌표와 NeuroML synapse mechanism을 보존하고, ConsciousnessEngine의 topology API는 coupling[target,source], typed channel, structural mask, stable population lock을 적용한다.",
         "children": [
           {
             "name": "NeuroML adapter",
@@ -141,19 +141,19 @@
             "name": "matched controls",
             "role": "배치와 연결 효과 분리",
             "id": "c302-controls",
-            "detail": "actual · position shuffle · degree-preserving connection shuffle · flat · random을 같은 seed와 측정기로 비교한다."
+            "detail": "actual · position shuffle · synapse-specific degree-preserving connection shuffle · flat · random을 같은 seed와 측정기로 비교한다."
           },
           {
             "name": "runtime topology binding",
             "role": "이름 있는 세포와 관측 edge를 실행 엔진에 고정",
             "id": "c302-runtime-binding",
-            "detail": "incoming-sum 정규화 뒤 chemical은 방향성을, electrical은 양방향성을 보존한다. structural mask는 Hebbian update가 관측되지 않은 edge를 새로 만들지 못하게 하고 population lock은 이름 있는 302개 뉴런의 분열·병합을 막는다."
+            "detail": "incoming-sum 정규화 뒤 static API는 기존 coupling을 유지하고 typed channel API는 NeuroML reversal potential 기반 흥분·억제 sign, rise/decay filter, electrical diffusive operator를 적용한다. population lock은 이름 있는 302개 뉴런의 분열·병합을 막는다."
           },
           {
             "name": "runtime dynamics",
             "role": "감각 뉴런 자극에서 운동 뉴런 응답까지 paired sham 측정",
             "id": "c302-runtime-dynamics",
-            "detail": "기존 ConsciousnessEngine의 cell_inputs API와 공간 exponential coupling을 사용한다. phase 2 all-motor 지표는 실패했다(actual 0.226631, best flat 0.226693). phase 3은 SSOT 역할 selector로 감각 역할이 겹치는 27개를 제외한 120개 pure-motor만 읽었으며 역시 실패했다(actual 0.000735, best connection shuffle 0.000947, paired wins 0-2/5). 반응은 phase 2 대비 99.68% 감소해 직접 자극 지배를 확인했다. 두 phase 모두 5개 군 x 5 seeds와 302개 identity를 보존하며, 사후 지표 변경 없이 별도 canonical 결과로 유지한다."
+            "detail": "기존 ConsciousnessEngine의 cell_inputs API와 공간 exponential coupling을 사용한다. phase 2 all-motor는 실패했다(actual 0.226631, best flat 0.226693). phase 3의 120개 pure-motor readout도 실패했다(actual 0.000735, best shuffle 0.000947). phase 4는 2,079 excitatory·200 inhibitory·1,084 electrical edge의 native channel 의미를 복원했으나 실패했다(actual 0.003111, best flat 0.007968, ratio 0.390, 모든 control에 paired wins 0/5). 모든 phase는 사후 지표 변경 없이 별도 canonical 결과로 유지한다."
           }
         ]
       },

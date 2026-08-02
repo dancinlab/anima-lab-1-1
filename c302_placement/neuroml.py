@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
-from .model import Connection, Connectome, Neuron, Position
+from .model import Connection, Connectome, Neuron, Position, SynapseMechanism
 
 
 def _local_name(tag: str) -> str:
@@ -25,6 +25,54 @@ def _instance_id(cell_reference: str | None) -> str:
         return "0"
     parts = [part for part in cell_reference.split("/") if part and part != ".."]
     return parts[1] if len(parts) > 1 and parts[1].isdigit() else "0"
+
+
+def _quantity(value: str | None, unit: str) -> float | None:
+    if value is None:
+        return None
+    compact = value.strip()
+    if not compact.endswith(unit):
+        raise ValueError(f"expected {unit} quantity, got {value}")
+    return float(compact[: -len(unit)].strip())
+
+
+def _synapse_mechanisms(root: ET.Element) -> tuple[SynapseMechanism, ...]:
+    mechanisms: list[SynapseMechanism] = []
+    for element in root:
+        kind = _local_name(element.tag)
+        if kind == "expTwoSynapse":
+            mechanisms.append(
+                SynapseMechanism(
+                    mechanism_id=element.attrib["id"],
+                    kind="exp_two",
+                    reversal_potential_mv=_quantity(element.attrib.get("erev"), "mV"),
+                    rise_time_ms=_quantity(element.attrib.get("tauRise"), "ms"),
+                    decay_time_ms=_quantity(element.attrib.get("tauDecay"), "ms"),
+                )
+            )
+        elif kind == "gapJunction":
+            mechanisms.append(
+                SynapseMechanism(
+                    mechanism_id=element.attrib["id"],
+                    kind="gap_junction",
+                )
+            )
+    return tuple(sorted(mechanisms, key=lambda mechanism: mechanism.mechanism_id))
+
+
+def _resting_potential(root: ET.Element, components: set[str]) -> float | None:
+    potentials = {
+        value
+        for cell in root
+        if _local_name(cell.tag) == "cell" and cell.attrib.get("id") in components
+        for node in cell.iter()
+        if _local_name(node.tag) == "initMembPotential"
+        for value in [_quantity(node.attrib.get("value"), "mV")]
+        if value is not None
+    }
+    if len(potentials) > 1:
+        raise ValueError("neuron components declare different resting potentials")
+    return next(iter(potentials), None)
 
 
 def _population_neurons(population: ET.Element) -> list[Neuron]:
@@ -69,6 +117,7 @@ def load_neuroml(path: Path, neuron_component_contains: str) -> Connectome:
 
     neurons: list[Neuron] = []
     populations: dict[str, list[str]] = {}
+    neuron_components: set[str] = set()
     for child in network:
         if _local_name(child.tag) != "population":
             continue
@@ -77,6 +126,7 @@ def load_neuroml(path: Path, neuron_component_contains: str) -> Connectome:
         found = _population_neurons(child)
         neurons.extend(found)
         populations[child.attrib["id"]] = [neuron.neuron_id for neuron in found]
+        neuron_components.add(child.attrib.get("component", ""))
 
     connections: list[Connection] = []
     for projection in network:
@@ -131,6 +181,8 @@ def load_neuroml(path: Path, neuron_component_contains: str) -> Connectome:
         source_id=network.attrib.get("id", path.stem),
         neurons=tuple(sorted(neurons, key=lambda neuron: neuron.neuron_id)),
         connections=tuple(sorted(connections, key=lambda edge: edge.connection_id)),
+        synapse_mechanisms=_synapse_mechanisms(root),
+        resting_potential_mv=_resting_potential(root, neuron_components),
     )
     connectome.validate()
     return connectome

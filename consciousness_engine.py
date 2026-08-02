@@ -151,6 +151,25 @@ class CellState:
         return sum(recent) / len(recent)
 
 
+@dataclass(frozen=True)
+class TopologyChannel:
+    """One typed operator in a fixed imported topology.
+
+    The matrix uses the canonical ``[target, source]`` convention. ``source``
+    channels transmit source activity, while ``diffusive`` channels transmit
+    source-minus-target differences. Optional time constants are expressed in
+    runtime steps so source adapters can keep physical-unit parsing outside the
+    engine.
+    """
+
+    name: str
+    coupling: torch.Tensor
+    mode: str = "source"
+    gain: float = 1.0
+    rise_time_steps: float = 0.0
+    decay_time_steps: float = 0.0
+
+
 class ConsciousnessEngine:
     """Canonical consciousness engine — all Laws embodied.
 
@@ -222,6 +241,9 @@ class ConsciousnessEngine:
         self._coupling: Optional[torch.Tensor] = None
         # Canonical topologies may lock plasticity to observed edges.
         self._coupling_mask: Optional[torch.Tensor] = None
+        # Typed imported channels are a strict extension of the canonical
+        # topology API. Legacy/static runtimes continue to use `_coupling`.
+        self._topology_channels: Optional[List[Dict]] = None
         # A named imported topology may also lock the population so mitosis or
         # merge cannot silently invalidate stable external neuron identities.
         self._population_locked = False
@@ -426,6 +448,7 @@ class ConsciousnessEngine:
             raise ValueError("topology external_id values must be unique")
 
         self._coupling = matrix.detach().clone()
+        self._topology_channels = None
         self._coupling_mask = self._coupling.ne(0) if lock_structure else None
         self._population_locked = lock_population
         for state, metadata in zip(self.cell_states, cell_metadata):
@@ -433,6 +456,123 @@ class ConsciousnessEngine:
             state.cell_type = metadata.get("cell_type")
             position = metadata.get("position")
             state.position = tuple(position) if position is not None else None
+
+    def configure_topology_channels(
+        self,
+        channels: List[TopologyChannel],
+        cell_metadata: List[Dict],
+        lock_structure: bool = True,
+        lock_population: bool = True,
+    ) -> None:
+        """Bind multiple signed, filtered topology operators.
+
+        Channel weights remain fixed to the imported source; the canonical
+        Hebbian matrix is retained only as an aggregate compatibility view.
+        Population locking is required because channel state is indexed by the
+        imported stable cell identities.
+        """
+        if not channels:
+            raise ValueError("topology channels cannot be empty")
+        if not lock_population:
+            raise ValueError("topology channels require a locked population")
+        names = [channel.name for channel in channels]
+        if len(names) != len(set(names)) or any(not name for name in names):
+            raise ValueError("topology channel names must be non-empty and unique")
+
+        expected_shape = (self.n_cells, self.n_cells)
+        prepared: List[Dict] = []
+        aggregate = torch.zeros(expected_shape, dtype=torch.float32)
+        aggregate_mask = torch.zeros(expected_shape, dtype=torch.bool)
+        for channel in channels:
+            matrix = torch.as_tensor(channel.coupling, dtype=torch.float32)
+            if tuple(matrix.shape) != expected_shape:
+                raise ValueError(
+                    f"channel {channel.name} shape {tuple(matrix.shape)} does not "
+                    f"match {expected_shape}"
+                )
+            if not torch.isfinite(matrix).all() or not math.isfinite(channel.gain):
+                raise ValueError(f"channel {channel.name} contains a non-finite value")
+            if matrix.min().item() < 0.0 or matrix.max().item() > 1.0:
+                raise ValueError(
+                    f"channel {channel.name} weights must be normalized to [0, 1]"
+                )
+            if torch.diagonal(matrix).abs().max().item() > 0.0:
+                raise ValueError("self-coupling is not supported")
+            if channel.mode not in {"source", "diffusive"}:
+                raise ValueError(f"unsupported topology channel mode: {channel.mode}")
+            if channel.rise_time_steps < 0 or channel.decay_time_steps < 0:
+                raise ValueError("topology channel time constants cannot be negative")
+            if (
+                channel.rise_time_steps > 0
+                and channel.decay_time_steps > 0
+                and channel.rise_time_steps >= channel.decay_time_steps
+            ):
+                raise ValueError("channel rise time must be shorter than decay time")
+            matrix = matrix.detach().clone()
+            aggregate += channel.gain * matrix
+            aggregate_mask |= matrix.ne(0)
+            prepared.append(
+                {
+                    "spec": channel,
+                    "coupling": matrix,
+                    "rise_state": torch.zeros(self.n_cells, self.cell_dim),
+                    "decay_state": torch.zeros(self.n_cells, self.cell_dim),
+                }
+            )
+
+        self.configure_topology(
+            aggregate,
+            cell_metadata,
+            lock_structure=lock_structure,
+            lock_population=lock_population,
+        )
+        self._coupling_mask = aggregate_mask if lock_structure else None
+        self._topology_channels = prepared
+
+    def _topology_channel_input(self, hidden_matrix: torch.Tensor) -> torch.Tensor:
+        if not self._topology_channels:
+            return self._coupling @ hidden_matrix
+        total = torch.zeros_like(hidden_matrix)
+        for channel in self._topology_channels:
+            spec = channel["spec"]
+            matrix = channel["coupling"]
+            drive = matrix @ hidden_matrix
+            if spec.mode == "diffusive":
+                drive = drive - matrix.sum(dim=1, keepdim=True) * hidden_matrix
+
+            if spec.rise_time_steps > 0 and spec.decay_time_steps > 0:
+                rise_alpha = math.exp(-1.0 / spec.rise_time_steps)
+                decay_alpha = math.exp(-1.0 / spec.decay_time_steps)
+                peak_time = math.log(
+                    spec.decay_time_steps / spec.rise_time_steps
+                ) * (
+                    spec.rise_time_steps
+                    * spec.decay_time_steps
+                    / (spec.decay_time_steps - spec.rise_time_steps)
+                )
+                waveform_factor = 1.0 / (
+                    math.exp(-peak_time / spec.decay_time_steps)
+                    - math.exp(-peak_time / spec.rise_time_steps)
+                )
+                channel["rise_state"] = (
+                    rise_alpha * channel["rise_state"] + waveform_factor * drive
+                )
+                channel["decay_state"] = (
+                    decay_alpha * channel["decay_state"] + waveform_factor * drive
+                )
+                response = channel["decay_state"] - channel["rise_state"]
+            elif spec.rise_time_steps > 0:
+                alpha = math.exp(-1.0 / spec.rise_time_steps)
+                channel["rise_state"] = alpha * channel["rise_state"] + drive
+                response = channel["rise_state"]
+            elif spec.decay_time_steps > 0:
+                alpha = math.exp(-1.0 / spec.decay_time_steps)
+                channel["decay_state"] = alpha * channel["decay_state"] + drive
+                response = channel["decay_state"]
+            else:
+                response = drive
+            total += spec.gain * response
+        return total
 
     @property
     def n_cells(self) -> int:
@@ -493,7 +633,7 @@ class ConsciousnessEngine:
                 )
         hidden_matrix = torch.stack(hidden_inputs)
         if self._coupling is not None:
-            inputs = inputs + PSI_COUPLING * (self._coupling @ hidden_matrix)
+            inputs = inputs + PSI_COUPLING * self._topology_channel_input(hidden_matrix)
 
         # 1. Process each cell with coupling influence
         outputs = []

@@ -30,10 +30,20 @@ median exclusive-motor response AUC versus 0.000947 for the degree-preserving
 connection shuffle. Removing the dual-role cells reduced the actual-arm median
 by 99.68%, confirming that the phase 2 readout was dominated by direct input.
 
+The fourth pre-registered stage restores source-declared synapse semantics in
+the same runtime: excitatory and inhibitory NeuroML channels use their native
+reversal-potential sign and rise/decay constants, while gap junctions use a
+bidirectional diffusive operator. It also failed its landing rule. Actual c302
+reached 0.003111 median exclusive-motor AUC versus 0.007968 for the flat
+placement control (ratio 0.390; paired wins 0/5 against every control). The
+biological arrangement therefore has no measured advantage in the GRU
+substrate even after source-declared channel semantics are restored.
+
 ```bash
 python -m c302_placement fetch
 python -m c302_placement run
 python -m c302_placement dynamics
+python -m c302_placement dynamics --experiment-id C302-SIGNED-SYNAPSE-DYNAMICS-1
 pytest -q tests/test_c302_placement.py
 ```
 

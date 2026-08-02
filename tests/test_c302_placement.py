@@ -11,10 +11,15 @@ from c302_placement.controls import (
     random_positions,
     rewire_connections,
     shuffle_positions,
+    synapse_degree_signature,
 )
 from c302_placement.metrics import measure
 from c302_placement.neuroml import load_neuroml
-from c302_placement.runtime import connection_length_scale, coupling_matrix
+from c302_placement.runtime import (
+    connection_length_scale,
+    coupling_matrix,
+    synapse_channels,
+)
 from c302_placement.dynamics import _role_indices
 
 FIXTURE = Path(__file__).parent / "fixtures" / "c302_minimal.net.nml"
@@ -27,6 +32,11 @@ def test_neuroml_adapter_preserves_named_neurons_positions_and_synapse_kinds():
     assert [edge.kind for edge in model.connections] == ["chemical", "electrical"]
     assert [edge.weight for edge in model.connections] == [2.0, 3.0]
     assert model.neurons[0].position.x == 1.0
+    assert model.resting_potential_mv == -45.0
+    assert [mechanism.mechanism_id for mechanism in model.synapse_mechanisms] == [
+        "exc",
+        "gap",
+    ]
 
 
 def test_placement_controls_keep_names_and_connections():
@@ -47,6 +57,9 @@ def test_rewiring_preserves_directed_and_electrical_degrees(full_connectome):
     rewired = rewire_connections(full_connectome, random.Random(302), 0.25)
 
     assert degree_signature(rewired) == degree_signature(full_connectome)
+    assert synapse_degree_signature(rewired) == synapse_degree_signature(
+        full_connectome
+    )
     assert rewired.connections != full_connectome.connections
 
 
@@ -64,6 +77,95 @@ def test_full_c302_shape(full_connectome):
         "chemical",
         "electrical",
     }
+    assert full_connectome.resting_potential_mv == -45.0
+    mechanisms = {
+        mechanism.mechanism_id: mechanism
+        for mechanism in full_connectome.synapse_mechanisms
+    }
+    assert mechanisms["neuron_to_neuron_exc_syn"].reversal_potential_mv == 0.0
+    assert mechanisms["neuron_to_neuron_inh_syn"].reversal_potential_mv == -60.0
+    assert mechanisms["neuron_to_neuron_inh_syn"].decay_time_ms == 40.0
+
+
+def test_native_synapse_channels_follow_neuroml_semantics(full_connectome):
+    channels = {
+        channel.name: channel
+        for channel in synapse_channels(
+            full_connectome,
+            "incoming_sum",
+            runtime_timestep_ms=1.0,
+        )
+    }
+
+    assert set(channels) == {
+        "neuron_to_neuron_elec_syn",
+        "neuron_to_neuron_exc_syn",
+        "neuron_to_neuron_inh_syn",
+    }
+    assert channels["neuron_to_neuron_exc_syn"].gain == 1.0
+    assert channels["neuron_to_neuron_exc_syn"].rise_time_steps == 1.0
+    assert channels["neuron_to_neuron_exc_syn"].decay_time_steps == 5.0
+    assert channels["neuron_to_neuron_inh_syn"].gain == -1.0
+    assert channels["neuron_to_neuron_inh_syn"].decay_time_steps == 40.0
+    assert channels["neuron_to_neuron_elec_syn"].mode == "diffusive"
+    total = sum(channel.coupling for channel in channels.values())
+    assert total.sum(dim=1).max().item() <= 1.0 + 1e-6
+
+
+def test_diffusive_channel_has_no_uniform_state_drive():
+    torch = pytest.importorskip("torch")
+    from consciousness_engine import ConsciousnessEngine, TopologyChannel
+
+    engine = ConsciousnessEngine(
+        cell_dim=2, hidden_dim=2, initial_cells=2, max_cells=2, phi_ratchet=False
+    )
+    engine.configure_topology_channels(
+        [
+            TopologyChannel(
+                name="gap",
+                coupling=torch.tensor([[0.0, 1.0], [1.0, 0.0]]),
+                mode="diffusive",
+            )
+        ],
+        [
+            {"external_id": "left"},
+            {"external_id": "right"},
+        ],
+        lock_population=True,
+    )
+
+    uniform = torch.ones(2, 2)
+    assert torch.equal(engine._topology_channel_input(uniform), torch.zeros(2, 2))
+
+
+def test_exp_two_channel_has_normalized_difference_of_exponentials():
+    torch = pytest.importorskip("torch")
+    from consciousness_engine import ConsciousnessEngine, TopologyChannel
+
+    engine = ConsciousnessEngine(
+        cell_dim=1, hidden_dim=1, initial_cells=2, max_cells=2, phi_ratchet=False
+    )
+    engine.configure_topology_channels(
+        [
+            TopologyChannel(
+                name="exc",
+                coupling=torch.tensor([[0.0, 1.0], [0.0, 0.0]]),
+                rise_time_steps=1.0,
+                decay_time_steps=5.0,
+            )
+        ],
+        [{"external_id": "target"}, {"external_id": "source"}],
+        lock_population=True,
+    )
+
+    impulse = torch.tensor([[0.0], [1.0]])
+    zero = torch.zeros(2, 1)
+    trace = [engine._topology_channel_input(impulse)[0, 0].item()]
+    trace.extend(engine._topology_channel_input(zero)[0, 0].item() for _ in range(20))
+
+    assert trace[0] == 0.0
+    assert 0.95 <= max(trace) <= 1.01
+    assert trace[-1] < 0.05
 
 
 def test_role_selection_excludes_dual_role_neurons(full_connectome):
@@ -120,6 +222,39 @@ def test_exclusive_motor_result_matches_registered_population():
         for arm in result["arms"].values()
         for row in arm
     } == {111}
+
+
+def test_signed_synapse_result_matches_registered_channels():
+    result = json.loads(
+        (
+            Path(__file__).parents[1]
+            / "state"
+            / "c302-signed-synapse-dynamics.json"
+        ).read_text(encoding="utf-8")
+    )
+
+    assert result["experiment_id"] == "C302-SIGNED-SYNAPSE-DYNAMICS-1"
+    assert result["protocol"]["synapse_model"] == "neuroml_native_channels"
+    assert result["protocol"]["resting_potential_mv"] == -45.0
+    assert {
+        channel["mechanism_id"]: channel["connection_count"]
+        for channel in result["protocol"]["synapse_channels"]
+    } == {
+        "neuron_to_neuron_elec_syn": 1084,
+        "neuron_to_neuron_exc_syn": 2079,
+        "neuron_to_neuron_inh_syn": 200,
+    }
+    assert {
+        row["readout_neurons"]
+        for arm in result["arms"].values()
+        for row in arm
+    } == {120}
+    assert all(
+        row["population_preserved"]
+        for arm in result["arms"].values()
+        for row in arm
+    )
+    assert result["verdict"]["landing_passed"] is False
 
 
 def test_runtime_binding_locks_named_topology():
