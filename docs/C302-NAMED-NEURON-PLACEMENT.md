@@ -289,6 +289,46 @@ are secondary diagnostics and cannot rescue a failed primary result.
 Canonical result target: `state/c302-neuromuscular-body-dynamics.json`. No
 phase 5 result had been generated when this protocol was registered.
 
+## Phase 5 result
+
+The protocol was fixed in commit `6b1fc0e` before a phase 5 result existed.
+The importer recovered 397 cells (302 neurons and 95 muscles), 3,363 neural
+connections, 552 neuron-to-muscle connections, two source cell components,
+five ion-channel definitions, and the source's 5 pA `offset_current` targeting
+PLML and PLMR. Every one of the 40 stimulated/sham trajectories remained
+finite over 20,000 source-timestep updates. A second complete execution matched
+the canonical result exactly after removing only `run_at`.
+
+| arm | median touch-evoked forward displacement | actual paired wins |
+|---|---:|---:|
+| actual closed loop | -4.68260e-10 | — |
+| neural shuffle closed loop | 5.26533e-11 | 0/5 |
+| neuromuscular shuffle closed loop | -1.72682e-9 | 5/5 |
+| actual open loop | -4.68260e-10 | 0/5 |
+
+**Verdict: failed.** The canonical closed loop is below the best control, the
+neural shuffle wins all five paired seeds, and the required 4/5 wins are not
+met against either that control or the exactly tied open loop. The sign is the
+registered anatomical-forward convention: under this reduced body model the
+actual response has a very small net backward rather than forward wave flux.
+
+The failure is informative in two separate ways. First, the source-driven
+runtime is active: the actual arm has a median 198 stimulated threshold events,
+nonzero muscle contrast, and a touch-evoked curvature RMS of 2.94057e-5 while
+the sham has zero events. Second, the registered 0.1 pA strain feedback never
+changes an event time, so closed and open trajectories are bit-identical. A
+subthreshold feedback current cannot affect downstream event synapses until it
+moves a source across threshold. Phase 5 therefore restores the declared
+conductance and neuromuscular machinery but does not establish an effective
+sensorimotor loop or biological locomotion.
+
+The next valid experiment must be separately registered. It should sweep a
+physically interpretable proprioceptive transduction range or replace the
+event-only chemical release approximation with a graded-release mechanism. It
+must not retune phase 5 after observing this failure.
+
+Canonical result: `state/c302-neuromuscular-body-dynamics.json`.
+
 ## Run
 
 ```bash
@@ -297,5 +337,6 @@ python -m c302_placement run
 python -m c302_placement dynamics
 python -m c302_placement dynamics --experiment-id C302-NAMED-NEURON-DYNAMICS-1
 python -m c302_placement dynamics --experiment-id C302-SIGNED-SYNAPSE-DYNAMICS-1
+python -m c302_placement biophysics
 pytest -q tests/test_c302_placement.py
 ```

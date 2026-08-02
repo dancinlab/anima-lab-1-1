@@ -2,7 +2,7 @@
   "schemaVersion": "2.0",
   "kind": "architecture-tree",
   "title": "anima-lab-1-1 — 아키텍처 SSOT",
-  "summary": "OpenWorm c302 NeuroML을 이름·3D 위치·시냅스가 보존된 Anima 런타임 topology로 연결하는 연구 분기. 기존 PureField 관문과 측정 규율을 계승한다.",
+  "summary": "OpenWorm c302 NeuroML을 이름·3D 위치·시냅스·막전위·이온채널·근육이 보존된 Anima 연구 런타임으로 연결하는 분기. 기존 PureField 관문과 측정 규율을 계승한다.",
   "columns": [
     {
       "key": "name",
@@ -129,7 +129,7 @@
         "name": "c302 named-neuron topology",
         "role": "canonical NeuroML 입력을 런타임 세포 배선으로 승격",
         "id": "c302-named-neuron-topology",
-        "detail": "config/c302_named_neuron_placement.json이 revision·checksum·seed·통제군·정규화·동역학 프로토콜의 SSOT다. c302_placement는 302개 이름·종류·좌표와 NeuroML synapse mechanism을 보존하고, ConsciousnessEngine의 topology API는 coupling[target,source], typed channel, structural mask, stable population lock을 적용한다.",
+        "detail": "config/c302_named_neuron_placement.json이 revision·checksum·seed·통제군·정규화·동역학·신경근 프로토콜의 SSOT다. c302_placement는 이름·종류·좌표와 NeuroML synapse/cell/channel mechanism을 보존하고, 기존 ConsciousnessEngine topology와 별도 conductance-body runtime이 같은 canonical 입력을 사용한다.",
         "children": [
           {
             "name": "NeuroML adapter",
@@ -154,6 +154,12 @@
             "role": "감각 뉴런 자극에서 운동 뉴런 응답까지 paired sham 측정",
             "id": "c302-runtime-dynamics",
             "detail": "기존 ConsciousnessEngine의 cell_inputs API와 공간 exponential coupling을 사용한다. phase 2 all-motor는 실패했다(actual 0.226631, best flat 0.226693). phase 3의 120개 pure-motor readout도 실패했다(actual 0.000735, best shuffle 0.000947). phase 4는 2,079 excitatory·200 inhibitory·1,084 electrical edge의 native channel 의미를 복원했으나 실패했다(actual 0.003111, best flat 0.007968, ratio 0.390, 모든 control에 paired wins 0/5). 모든 phase는 사후 지표 변경 없이 별도 canonical 결과로 유지한다."
+          },
+          {
+            "name": "neuromuscular body runtime",
+            "role": "GRU를 source-declared conductance·muscle dynamics와 24체절 폐루프로 대체",
+            "id": "c302-neuromuscular-body-runtime",
+            "detail": "고정 upstream revision에서 c302_C_Full.net.nml과 cell_C.xml을 각각 checksum 검증해 302 뉴런·95 근육·3,915 연결·막전위·HH gate·칼슘·PLML/PLMR 입력을 복원한다. phase 5는 유한·결정적으로 실행됐으나 actual closed-loop displacement -4.68260e-10이 neural shuffle 5.26533e-11보다 낮아 실패했다. 등록된 0.1pA strain feedback은 event time을 바꾸지 못해 open loop와 bit-identical했다."
           }
         ]
       },

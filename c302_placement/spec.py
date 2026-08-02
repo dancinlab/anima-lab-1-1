@@ -117,12 +117,8 @@ class ExperimentSpec:
                     "stimulus_exclude_roles": tuple(
                         experiment["stimulus_exclude_roles"]
                     ),
-                    "readout_include_roles": tuple(
-                        experiment["readout_include_roles"]
-                    ),
-                    "readout_exclude_roles": tuple(
-                        experiment["readout_exclude_roles"]
-                    ),
+                    "readout_include_roles": tuple(experiment["readout_include_roles"]),
+                    "readout_exclude_roles": tuple(experiment["readout_exclude_roles"]),
                 }
             )
             for experiment in dynamics["experiments"]
@@ -154,13 +150,9 @@ class ExperimentSpec:
                 }
             ),
             runtime=RuntimeSpec(**raw["runtime"]),
-            default_dynamics_experiment_id=dynamics[
-                "default_experiment_id"
-            ],
+            default_dynamics_experiment_id=dynamics["default_experiment_id"],
             dynamics_experiments=experiments,
-            default_biophysics_experiment_id=biophysics[
-                "default_experiment_id"
-            ],
+            default_biophysics_experiment_id=biophysics["default_experiment_id"],
             biophysics_experiments=biophysics_experiments,
         )
         spec.dynamics_for()
@@ -195,19 +187,35 @@ class ExperimentSpec:
             if experiment.experiment_id == selected
         ]
         if len(matches) != 1:
-            raise ValueError(
-                f"unknown or duplicate biophysics experiment: {selected}"
-            )
+            raise ValueError(f"unknown or duplicate biophysics experiment: {selected}")
         return matches[0]
 
     def fetch(self, destination: Path) -> Path:
+        return self._fetch_artifact(
+            destination,
+            self.source.download_url,
+            self.source.sha256,
+        )
+
+    @staticmethod
+    def _fetch_artifact(destination: Path, url: str, expected_sha256: str) -> Path:
         destination.parent.mkdir(parents=True, exist_ok=True)
         if not destination.exists():
-            with urlopen(self.source.download_url, timeout=60) as response:
+            with urlopen(url, timeout=60) as response:
                 destination.write_bytes(response.read())
         digest = hashlib.sha256(destination.read_bytes()).hexdigest()
-        if digest != self.source.sha256:
+        if digest != expected_sha256:
             raise ValueError(
-                f"source checksum mismatch: expected {self.source.sha256}, got {digest}"
+                f"source checksum mismatch: expected {expected_sha256}, got {digest}"
             )
         return destination
+
+    def fetch_includes(self, destination_directory: Path) -> tuple[Path, ...]:
+        return tuple(
+            self._fetch_artifact(
+                destination_directory / Path(artifact.model_path).name,
+                self.source.artifact_url(artifact.model_path),
+                artifact.sha256,
+            )
+            for artifact in self.source.include_files
+        )

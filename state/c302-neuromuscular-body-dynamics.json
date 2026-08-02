@@ -1,0 +1,541 @@
+{
+  "arms": {
+    "actual_closed_loop": [
+      {
+        "finite": true,
+        "max_abs_membrane_potential_mv": 59.95458804766277,
+        "seed": 302,
+        "sham_event_count": 0,
+        "sham_forward_displacement": -2.6404527902728043e-17,
+        "stimulated_curvature_rms": 2.9409312414044866e-05,
+        "stimulated_event_count": 198,
+        "stimulated_forward_displacement": -4.687293518014004e-10,
+        "stimulated_muscle_activation_contrast": 2.6039607230675084e-06,
+        "stimulated_traveling_wave_coherence": -0.021863764649386597,
+        "touch_evoked_curvature_rms": 2.940482747281645e-05,
+        "touch_evoked_forward_displacement": -4.687293253968726e-10
+      },
+      {
+        "finite": true,
+        "max_abs_membrane_potential_mv": 59.95458844097941,
+        "seed": 303,
+        "sham_event_count": 0,
+        "sham_forward_displacement": -4.6880165451043676e-18,
+        "stimulated_curvature_rms": 2.941035541460576e-05,
+        "stimulated_event_count": 198,
+        "stimulated_forward_displacement": -4.681941715993779e-10,
+        "stimulated_muscle_activation_contrast": 2.6039399553120914e-06,
+        "stimulated_traveling_wave_coherence": -0.021837384811047637,
+        "touch_evoked_curvature_rms": 2.940722319531391e-05,
+        "touch_evoked_forward_displacement": -4.681941669113613e-10
+      },
+      {
+        "finite": true,
+        "max_abs_membrane_potential_mv": 59.95458802444853,
+        "seed": 304,
+        "sham_event_count": 0,
+        "sham_forward_displacement": -2.779716226111412e-19,
+        "stimulated_curvature_rms": 2.9409297833689097e-05,
+        "stimulated_event_count": 198,
+        "stimulated_forward_displacement": -4.679706361108736e-10,
+        "stimulated_muscle_activation_contrast": 2.6039704107602743e-06,
+        "stimulated_traveling_wave_coherence": -0.021828478043429696,
+        "touch_evoked_curvature_rms": 2.940580342189191e-05,
+        "touch_evoked_forward_displacement": -4.679706358329019e-10
+      },
+      {
+        "finite": true,
+        "max_abs_membrane_potential_mv": 59.954588212991496,
+        "seed": 305,
+        "sham_event_count": 0,
+        "sham_forward_displacement": 5.38232322203538e-18,
+        "stimulated_curvature_rms": 2.9409616135734656e-05,
+        "stimulated_event_count": 198,
+        "stimulated_forward_displacement": -4.686500056818264e-10,
+        "stimulated_muscle_activation_contrast": 2.603941856116178e-06,
+        "stimulated_traveling_wave_coherence": -0.021858730635781358,
+        "touch_evoked_curvature_rms": 2.9405091377794353e-05,
+        "touch_evoked_forward_displacement": -4.686500110641496e-10
+      },
+      {
+        "finite": true,
+        "max_abs_membrane_potential_mv": 59.95458824156539,
+        "seed": 306,
+        "sham_event_count": 0,
+        "sham_forward_displacement": -6.95444893680966e-18,
+        "stimulated_curvature_rms": 2.9408857814454815e-05,
+        "stimulated_event_count": 198,
+        "stimulated_forward_displacement": -4.682604044770846e-10,
+        "stimulated_muscle_activation_contrast": 2.603962129283451e-06,
+        "stimulated_traveling_wave_coherence": -0.021842157802442034,
+        "touch_evoked_curvature_rms": 2.9405678090031198e-05,
+        "touch_evoked_forward_displacement": -4.682603975226356e-10
+      }
+    ],
+    "actual_open_loop": [
+      {
+        "finite": true,
+        "max_abs_membrane_potential_mv": 59.95458804766277,
+        "seed": 302,
+        "sham_event_count": 0,
+        "sham_forward_displacement": -2.6404527902728043e-17,
+        "stimulated_curvature_rms": 2.9409312414044866e-05,
+        "stimulated_event_count": 198,
+        "stimulated_forward_displacement": -4.687293518014004e-10,
+        "stimulated_muscle_activation_contrast": 2.6039607230675084e-06,
+        "stimulated_traveling_wave_coherence": -0.021863764649386597,
+        "touch_evoked_curvature_rms": 2.940482747281645e-05,
+        "touch_evoked_forward_displacement": -4.687293253968726e-10
+      },
+      {
+        "finite": true,
+        "max_abs_membrane_potential_mv": 59.95458844097941,
+        "seed": 303,
+        "sham_event_count": 0,
+        "sham_forward_displacement": -4.6880165451043676e-18,
+        "stimulated_curvature_rms": 2.941035541460576e-05,
+        "stimulated_event_count": 198,
+        "stimulated_forward_displacement": -4.681941715993779e-10,
+        "stimulated_muscle_activation_contrast": 2.6039399553120914e-06,
+        "stimulated_traveling_wave_coherence": -0.021837384811047637,
+        "touch_evoked_curvature_rms": 2.940722319531391e-05,
+        "touch_evoked_forward_displacement": -4.681941669113613e-10
+      },
+      {
+        "finite": true,
+        "max_abs_membrane_potential_mv": 59.95458802444853,
+        "seed": 304,
+        "sham_event_count": 0,
+        "sham_forward_displacement": -2.779716226111412e-19,
+        "stimulated_curvature_rms": 2.9409297833689097e-05,
+        "stimulated_event_count": 198,
+        "stimulated_forward_displacement": -4.679706361108736e-10,
+        "stimulated_muscle_activation_contrast": 2.6039704107602743e-06,
+        "stimulated_traveling_wave_coherence": -0.021828478043429696,
+        "touch_evoked_curvature_rms": 2.940580342189191e-05,
+        "touch_evoked_forward_displacement": -4.679706358329019e-10
+      },
+      {
+        "finite": true,
+        "max_abs_membrane_potential_mv": 59.954588212991496,
+        "seed": 305,
+        "sham_event_count": 0,
+        "sham_forward_displacement": 5.38232322203538e-18,
+        "stimulated_curvature_rms": 2.9409616135734656e-05,
+        "stimulated_event_count": 198,
+        "stimulated_forward_displacement": -4.686500056818264e-10,
+        "stimulated_muscle_activation_contrast": 2.603941856116178e-06,
+        "stimulated_traveling_wave_coherence": -0.021858730635781358,
+        "touch_evoked_curvature_rms": 2.9405091377794353e-05,
+        "touch_evoked_forward_displacement": -4.686500110641496e-10
+      },
+      {
+        "finite": true,
+        "max_abs_membrane_potential_mv": 59.95458824156539,
+        "seed": 306,
+        "sham_event_count": 0,
+        "sham_forward_displacement": -6.95444893680966e-18,
+        "stimulated_curvature_rms": 2.9408857814454815e-05,
+        "stimulated_event_count": 198,
+        "stimulated_forward_displacement": -4.682604044770846e-10,
+        "stimulated_muscle_activation_contrast": 2.603962129283451e-06,
+        "stimulated_traveling_wave_coherence": -0.021842157802442034,
+        "touch_evoked_curvature_rms": 2.9405678090031198e-05,
+        "touch_evoked_forward_displacement": -4.682603975226356e-10
+      }
+    ],
+    "neural_shuffle_closed_loop": [
+      {
+        "finite": true,
+        "max_abs_membrane_potential_mv": 59.934501057991085,
+        "seed": 302,
+        "sham_event_count": 0,
+        "sham_forward_displacement": -2.6404527902728043e-17,
+        "stimulated_curvature_rms": 2.4951723844506827e-05,
+        "stimulated_event_count": 244,
+        "stimulated_forward_displacement": 5.222420884092384e-11,
+        "stimulated_muscle_activation_contrast": 2.223766068859932e-06,
+        "stimulated_traveling_wave_coherence": 0.002986981665738583,
+        "touch_evoked_curvature_rms": 2.4947238903278413e-05,
+        "touch_evoked_forward_displacement": 5.222423524545174e-11
+      },
+      {
+        "finite": true,
+        "max_abs_membrane_potential_mv": 59.93450088779569,
+        "seed": 303,
+        "sham_event_count": 0,
+        "sham_forward_displacement": -4.6880165451043676e-18,
+        "stimulated_curvature_rms": 2.4950694212427994e-05,
+        "stimulated_event_count": 244,
+        "stimulated_forward_displacement": 5.2999928608784505e-11,
+        "stimulated_muscle_activation_contrast": 2.223784253958572e-06,
+        "stimulated_traveling_wave_coherence": 0.003031629589059775,
+        "touch_evoked_curvature_rms": 2.4947561993136144e-05,
+        "touch_evoked_forward_displacement": 5.299993329680105e-11
+      },
+      {
+        "finite": true,
+        "max_abs_membrane_potential_mv": 59.93450118076649,
+        "seed": 304,
+        "sham_event_count": 0,
+        "sham_forward_displacement": -2.779716226111412e-19,
+        "stimulated_curvature_rms": 2.4951759464046406e-05,
+        "stimulated_event_count": 244,
+        "stimulated_forward_displacement": 5.282288121571402e-11,
+        "stimulated_muscle_activation_contrast": 2.2237939425360122e-06,
+        "stimulated_traveling_wave_coherence": 0.003021481868841183,
+        "touch_evoked_curvature_rms": 2.4948265052249218e-05,
+        "touch_evoked_forward_displacement": 5.2822881493685643e-11
+      },
+      {
+        "finite": true,
+        "max_abs_membrane_potential_mv": 59.93450104664925,
+        "seed": 305,
+        "sham_event_count": 0,
+        "sham_forward_displacement": 5.38232322203538e-18,
+        "stimulated_curvature_rms": 2.495277442460981e-05,
+        "stimulated_event_count": 244,
+        "stimulated_forward_displacement": 5.265332932236827e-11,
+        "stimulated_muscle_activation_contrast": 2.223777411989389e-06,
+        "stimulated_traveling_wave_coherence": 0.003011371743156356,
+        "touch_evoked_curvature_rms": 2.4948249666669506e-05,
+        "touch_evoked_forward_displacement": 5.2653323940045044e-11
+      },
+      {
+        "finite": true,
+        "max_abs_membrane_potential_mv": 59.93450113794058,
+        "seed": 306,
+        "sham_event_count": 0,
+        "sham_forward_displacement": -6.95444893680966e-18,
+        "stimulated_curvature_rms": 2.495035868620326e-05,
+        "stimulated_event_count": 244,
+        "stimulated_forward_displacement": 5.237839856369622e-11,
+        "stimulated_muscle_activation_contrast": 2.2237865153322454e-06,
+        "stimulated_traveling_wave_coherence": 0.002996119223029757,
+        "touch_evoked_curvature_rms": 2.4947178961779644e-05,
+        "touch_evoked_forward_displacement": 5.237840551814516e-11
+      }
+    ],
+    "neuromuscular_shuffle_closed_loop": [
+      {
+        "finite": true,
+        "max_abs_membrane_potential_mv": 59.95458804766277,
+        "seed": 302,
+        "sham_event_count": 0,
+        "sham_forward_displacement": -2.6404527902728043e-17,
+        "stimulated_curvature_rms": 3.045878944839831e-05,
+        "stimulated_event_count": 198,
+        "stimulated_forward_displacement": -1.72681805636058e-09,
+        "stimulated_muscle_activation_contrast": 2.6515913884788936e-06,
+        "stimulated_traveling_wave_coherence": -0.05545988586830225,
+        "touch_evoked_curvature_rms": 3.0454304507169896e-05,
+        "touch_evoked_forward_displacement": -1.726818029956052e-09
+      },
+      {
+        "finite": true,
+        "max_abs_membrane_potential_mv": 59.95458844097941,
+        "seed": 303,
+        "sham_event_count": 0,
+        "sham_forward_displacement": -4.6880165451043676e-18,
+        "stimulated_curvature_rms": 3.045889378517923e-05,
+        "stimulated_event_count": 198,
+        "stimulated_forward_displacement": -1.725504099311481e-09,
+        "stimulated_muscle_activation_contrast": 2.6515993584796457e-06,
+        "stimulated_traveling_wave_coherence": -0.055417092578616094,
+        "touch_evoked_curvature_rms": 3.0455761565887378e-05,
+        "touch_evoked_forward_displacement": -1.7255040946234645e-09
+      },
+      {
+        "finite": true,
+        "max_abs_membrane_potential_mv": 59.95458802444853,
+        "seed": 304,
+        "sham_event_count": 0,
+        "sham_forward_displacement": -2.779716226111412e-19,
+        "stimulated_curvature_rms": 3.0460396131138305e-05,
+        "stimulated_event_count": 198,
+        "stimulated_forward_displacement": -1.7271683809850494e-09,
+        "stimulated_muscle_activation_contrast": 2.6515994914963428e-06,
+        "stimulated_traveling_wave_coherence": -0.055467793564112765,
+        "touch_evoked_curvature_rms": 3.0456901719341117e-05,
+        "touch_evoked_forward_displacement": -1.7271683807070779e-09
+      },
+      {
+        "finite": true,
+        "max_abs_membrane_potential_mv": 59.954588212991496,
+        "seed": 305,
+        "sham_event_count": 0,
+        "sham_forward_displacement": 5.38232322203538e-18,
+        "stimulated_curvature_rms": 3.0460827278322885e-05,
+        "stimulated_event_count": 198,
+        "stimulated_forward_displacement": -1.7271381062198116e-09,
+        "stimulated_muscle_activation_contrast": 2.6515744483160485e-06,
+        "stimulated_traveling_wave_coherence": -0.05546567334006708,
+        "touch_evoked_curvature_rms": 3.0456302520382583e-05,
+        "touch_evoked_forward_displacement": -1.7271381116021349e-09
+      },
+      {
+        "finite": true,
+        "max_abs_membrane_potential_mv": 59.95458824156539,
+        "seed": 306,
+        "sham_event_count": 0,
+        "sham_forward_displacement": -6.95444893680966e-18,
+        "stimulated_curvature_rms": 3.045807718047704e-05,
+        "stimulated_event_count": 198,
+        "stimulated_forward_displacement": -1.7267706785376344e-09,
+        "stimulated_muscle_activation_contrast": 2.65159641588422e-06,
+        "stimulated_traveling_wave_coherence": -0.05546362122840286,
+        "touch_evoked_curvature_rms": 3.0454897456053422e-05,
+        "touch_evoked_forward_displacement": -1.7267706715831853e-09
+      }
+    ]
+  },
+  "experiment_id": "C302-NEUROMUSCULAR-BODY-DYNAMICS-1",
+  "manifest": {
+    "cell_components": [
+      "GenericMuscleCell",
+      "GenericNeuronCell"
+    ],
+    "cells": 397,
+    "ion_channels": [
+      "Leak",
+      "ca_boyle",
+      "ca_simple",
+      "k_fast",
+      "k_slow"
+    ],
+    "muscles": 95,
+    "neural_connections": 3363,
+    "neuromuscular_connections": 552,
+    "neurons": 302,
+    "synapses": {
+      "neuron_to_muscle_exc_syn": 428,
+      "neuron_to_muscle_inh_syn": 124,
+      "neuron_to_neuron_elec_syn": 1084,
+      "neuron_to_neuron_exc_syn": 2079,
+      "neuron_to_neuron_inh_syn": 200
+    }
+  },
+  "protocol": {
+    "body_model": "damped_segment_chain",
+    "body_segments": 24,
+    "controls": [
+      "actual_closed_loop",
+      "neural_shuffle_closed_loop",
+      "neuromuscular_shuffle_closed_loop",
+      "actual_open_loop"
+    ],
+    "duration_ms": 1000.0,
+    "minimum_pairwise_wins": 4,
+    "primary_metric": "touch_evoked_forward_displacement",
+    "seeds": [
+      302,
+      303,
+      304,
+      305,
+      306
+    ],
+    "stimulus_component_id": "offset_current",
+    "stimulus_targets": [
+      "PLML",
+      "PLMR"
+    ],
+    "synapse_model": "neuroml_event_conductance",
+    "timestep_ms": 0.05
+  },
+  "run_at": "2026-08-02T14:51:49.932200+00:00",
+  "source": {
+    "include_files": [
+      {
+        "model_path": "examples/cell_C.xml",
+        "sha256": "268567c72ca409552f93c786c40f061bfdd900af34defaef417e45ffa6659ab4"
+      }
+    ],
+    "model_path": "examples/c302_C_Full.net.nml",
+    "repository": "https://github.com/openworm/c302",
+    "revision": "aad88a80aa7f217fe109a89f4b68ccb043430722",
+    "sha256": "619d714bcee72a83c056fce8a594aea791061f74f19d22c8c9da34c0656deb0c"
+  },
+  "source_experiment_id": "C302-NAMED-NEURON-PLACEMENT-1",
+  "summaries": {
+    "actual_closed_loop": {
+      "max_abs_membrane_potential_mv": {
+        "mean": 59.95458819352952,
+        "median": 59.954588212991496
+      },
+      "sham_event_count": {
+        "mean": 0.0,
+        "median": 0
+      },
+      "sham_forward_displacement": {
+        "mean": -6.5885283570435666e-18,
+        "median": -4.6880165451043676e-18
+      },
+      "stimulated_curvature_rms": {
+        "mean": 2.9409487922505837e-05,
+        "median": 2.9409312414044866e-05
+      },
+      "stimulated_event_count": {
+        "mean": 198.0,
+        "median": 198
+      },
+      "stimulated_forward_displacement": {
+        "mean": -4.683609139341125e-10,
+        "median": -4.682604044770846e-10
+      },
+      "stimulated_muscle_activation_contrast": {
+        "mean": 2.6039550149079004e-06,
+        "median": 2.6039607230675084e-06
+      },
+      "stimulated_traveling_wave_coherence": {
+        "mean": -0.021846103188417464,
+        "median": -0.021842157802442034
+      },
+      "touch_evoked_curvature_rms": {
+        "mean": 2.9405724711569564e-05,
+        "median": 2.9405678090031198e-05
+      },
+      "touch_evoked_forward_displacement": {
+        "mean": -4.683609073455842e-10,
+        "median": -4.682603975226356e-10
+      }
+    },
+    "actual_open_loop": {
+      "max_abs_membrane_potential_mv": {
+        "mean": 59.95458819352952,
+        "median": 59.954588212991496
+      },
+      "sham_event_count": {
+        "mean": 0.0,
+        "median": 0
+      },
+      "sham_forward_displacement": {
+        "mean": -6.5885283570435666e-18,
+        "median": -4.6880165451043676e-18
+      },
+      "stimulated_curvature_rms": {
+        "mean": 2.9409487922505837e-05,
+        "median": 2.9409312414044866e-05
+      },
+      "stimulated_event_count": {
+        "mean": 198.0,
+        "median": 198
+      },
+      "stimulated_forward_displacement": {
+        "mean": -4.683609139341125e-10,
+        "median": -4.682604044770846e-10
+      },
+      "stimulated_muscle_activation_contrast": {
+        "mean": 2.6039550149079004e-06,
+        "median": 2.6039607230675084e-06
+      },
+      "stimulated_traveling_wave_coherence": {
+        "mean": -0.021846103188417464,
+        "median": -0.021842157802442034
+      },
+      "touch_evoked_curvature_rms": {
+        "mean": 2.9405724711569564e-05,
+        "median": 2.9405678090031198e-05
+      },
+      "touch_evoked_forward_displacement": {
+        "mean": -4.683609073455842e-10,
+        "median": -4.682603975226356e-10
+      }
+    },
+    "neural_shuffle_closed_loop": {
+      "max_abs_membrane_potential_mv": {
+        "mean": 59.93450106222862,
+        "median": 59.934501057991085
+      },
+      "sham_event_count": {
+        "mean": 0.0,
+        "median": 0
+      },
+      "sham_forward_displacement": {
+        "mean": -6.5885283570435666e-18,
+        "median": -4.6880165451043676e-18
+      },
+      "stimulated_curvature_rms": {
+        "mean": 2.495146212635886e-05,
+        "median": 2.4951723844506827e-05
+      },
+      "stimulated_event_count": {
+        "mean": 244.0,
+        "median": 244
+      },
+      "stimulated_forward_displacement": {
+        "mean": 5.261574931029737e-11,
+        "median": 5.265332932236827e-11
+      },
+      "stimulated_muscle_activation_contrast": {
+        "mean": 2.2237816385352303e-06,
+        "median": 2.223784253958572e-06
+      },
+      "stimulated_traveling_wave_coherence": {
+        "mean": 0.003009516817965131,
+        "median": 0.003011371743156356
+      },
+      "touch_evoked_curvature_rms": {
+        "mean": 2.4947698915422587e-05,
+        "median": 2.4947561993136144e-05
+      },
+      "touch_evoked_forward_displacement": {
+        "mean": 5.2615755898825724e-11,
+        "median": 5.2653323940045044e-11
+      }
+    },
+    "neuromuscular_shuffle_closed_loop": {
+      "max_abs_membrane_potential_mv": {
+        "mean": 59.95458819352952,
+        "median": 59.954588212991496
+      },
+      "sham_event_count": {
+        "mean": 0.0,
+        "median": 0
+      },
+      "sham_forward_displacement": {
+        "mean": -6.5885283570435666e-18,
+        "median": -4.6880165451043676e-18
+      },
+      "stimulated_curvature_rms": {
+        "mean": 3.0459396764703155e-05,
+        "median": 3.045889378517923e-05
+      },
+      "stimulated_event_count": {
+        "mean": 198.0,
+        "median": 198
+      },
+      "stimulated_forward_displacement": {
+        "mean": -1.7266798642829113e-09,
+        "median": -1.72681805636058e-09
+      },
+      "stimulated_muscle_activation_contrast": {
+        "mean": 2.6515922205310303e-06,
+        "median": 2.65159641588422e-06
+      },
+      "stimulated_traveling_wave_coherence": {
+        "mean": -0.05545481331590021,
+        "median": -0.05546362122840286
+      },
+      "touch_evoked_curvature_rms": {
+        "mean": 3.0455633553766882e-05,
+        "median": 3.0455761565887378e-05
+      },
+      "touch_evoked_forward_displacement": {
+        "mean": -1.726679857694383e-09,
+        "median": -1.726818029956052e-09
+      }
+    }
+  },
+  "verdict": {
+    "actual_median": -4.682603975226356e-10,
+    "actual_to_best_control_ratio": -8.893273253856327,
+    "all_finite": true,
+    "best_control_median": 5.2653323940045044e-11,
+    "landing_passed": false,
+    "pairwise_seed_wins": {
+      "actual_open_loop": 0,
+      "neural_shuffle_closed_loop": 0,
+      "neuromuscular_shuffle_closed_loop": 5
+    }
+  }
+}

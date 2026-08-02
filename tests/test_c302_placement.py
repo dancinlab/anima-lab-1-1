@@ -13,14 +13,18 @@ from c302_placement.controls import (
     shuffle_positions,
     synapse_degree_signature,
 )
+from c302_placement.dynamics import _role_indices
 from c302_placement.metrics import measure
 from c302_placement.neuroml import load_neuroml
+from c302_placement.neuromuscular import (
+    ConductanceBodyRuntime,
+    build_biophysical_controls,
+)
 from c302_placement.runtime import (
     connection_length_scale,
     coupling_matrix,
     synapse_channels,
 )
-from c302_placement.dynamics import _role_indices
 
 FIXTURE = Path(__file__).parent / "fixtures" / "c302_minimal.net.nml"
 
@@ -171,9 +175,7 @@ def test_exp_two_channel_has_normalized_difference_of_exponentials():
 def test_role_selection_excludes_dual_role_neurons(full_connectome):
     sensory = _role_indices(full_connectome, ("sensory",), ())
     motor = _role_indices(full_connectome, ("motor",), ())
-    exclusive_motor = _role_indices(
-        full_connectome, ("motor",), ("sensory",)
-    )
+    exclusive_motor = _role_indices(full_connectome, ("motor",), ("sensory",))
 
     assert len(sensory) == 111
     assert len(motor) == 147
@@ -222,12 +224,114 @@ def test_neuromuscular_protocol_is_registered_in_canonical_ssot():
     assert spec.source.include_files[0].model_path == "examples/cell_C.xml"
 
 
+def test_full_neuromuscular_source_restores_cells_channels_and_input(
+    full_neuromuscular_model,
+):
+    model = full_neuromuscular_model
+    assert len(model.cells) == 397
+    assert sum(cell.cell_type == "muscle" for cell in model.cells) == 95
+    assert len(model.connections) == 3915
+    assert (
+        sum(
+            next(cell for cell in model.cells if cell.cell_id == edge.target).cell_type
+            == "muscle"
+            for edge in model.connections
+        )
+        == 552
+    )
+    assert model.recommended_timestep_ms == 0.05
+    assert model.recommended_duration_ms == 1000.0
+    assert model.stimuli[0].target_cell_ids == ("PLML", "PLMR")
+    assert model.stimuli[0].amplitude_pa == 5.0
+    assert {component.component_id for component in model.cell_components} == {
+        "GenericMuscleCell",
+        "GenericNeuronCell",
+    }
+    assert {channel.channel_id for channel in model.ion_channels} == {
+        "Leak",
+        "ca_boyle",
+        "ca_simple",
+        "k_fast",
+        "k_slow",
+    }
+
+
+def test_biophysical_controls_preserve_registered_degree_invariants(
+    full_neuromuscular_model,
+):
+    from c302_placement.spec import ExperimentSpec
+
+    spec = ExperimentSpec.load(
+        Path(__file__).parents[1] / "config" / "c302_named_neuron_placement.json"
+    )
+    variants = build_biophysical_controls(
+        full_neuromuscular_model,
+        spec.biophysics.controls,
+        spec.seed,
+        spec.rewiring_swaps_per_edge,
+    )
+    canonical = variants["actual_closed_loop"][0]
+    canonical_connectome = _model_connectome(canonical)
+    for variant, feedback_enabled in variants.values():
+        variant_connectome = _model_connectome(variant)
+        assert degree_signature(variant_connectome) == degree_signature(
+            canonical_connectome
+        )
+        assert synapse_degree_signature(variant_connectome) == synapse_degree_signature(
+            canonical_connectome
+        )
+        assert len(variant.cells) == 397
+        assert isinstance(feedback_enabled, bool)
+
+
+def _model_connectome(model):
+    from c302_placement.model import Connectome, Neuron
+
+    return Connectome(
+        source_id=model.source_id,
+        neurons=tuple(
+            Neuron(
+                neuron_id=cell.cell_id,
+                component=cell.component,
+                neuron_type=cell.cell_type,
+                position=cell.position,
+                properties=cell.properties,
+            )
+            for cell in model.cells
+        ),
+        connections=model.connections,
+        synapse_mechanisms=model.synapse_mechanisms,
+    )
+
+
+def test_conductance_body_runtime_uses_source_timestep_and_stays_finite(
+    full_neuromuscular_model,
+):
+    import numpy as np
+
+    from c302_placement.spec import ExperimentSpec
+
+    spec = ExperimentSpec.load(
+        Path(__file__).parents[1] / "config" / "c302_named_neuron_placement.json"
+    )
+    runtime = ConductanceBodyRuntime(
+        full_neuromuscular_model, spec.biophysics, seed=302, feedback_enabled=True
+    )
+    for step in range(200):
+        runtime.step(step * runtime.dt, stimulus_enabled=True, sample=step % 20 == 0)
+
+    assert runtime.dt == full_neuromuscular_model.recommended_timestep_ms
+    assert np.isfinite(runtime.voltage).all()
+    assert np.isfinite(runtime.calcium).all()
+    assert np.isfinite(runtime.curvature).all()
+    assert runtime.voltage.shape == (397,)
+    assert len(runtime.muscle_segments) == 24
+
+
 def test_exclusive_motor_result_matches_registered_population():
     result = json.loads(
         (
-            Path(__file__).parents[1]
-            / "state"
-            / "c302-exclusive-motor-dynamics.json"
+            Path(__file__).parents[1] / "state" / "c302-exclusive-motor-dynamics.json"
         ).read_text(encoding="utf-8")
     )
 
@@ -235,23 +339,17 @@ def test_exclusive_motor_result_matches_registered_population():
     assert result["protocol"]["readout_include_roles"] == ["motor"]
     assert result["protocol"]["readout_exclude_roles"] == ["sensory"]
     assert {
-        row["readout_neurons"]
-        for arm in result["arms"].values()
-        for row in arm
+        row["readout_neurons"] for arm in result["arms"].values() for row in arm
     } == {120}
     assert {
-        row["stimulus_neurons"]
-        for arm in result["arms"].values()
-        for row in arm
+        row["stimulus_neurons"] for arm in result["arms"].values() for row in arm
     } == {111}
 
 
 def test_signed_synapse_result_matches_registered_channels():
     result = json.loads(
         (
-            Path(__file__).parents[1]
-            / "state"
-            / "c302-signed-synapse-dynamics.json"
+            Path(__file__).parents[1] / "state" / "c302-signed-synapse-dynamics.json"
         ).read_text(encoding="utf-8")
     )
 
@@ -267,16 +365,35 @@ def test_signed_synapse_result_matches_registered_channels():
         "neuron_to_neuron_inh_syn": 200,
     }
     assert {
-        row["readout_neurons"]
-        for arm in result["arms"].values()
-        for row in arm
+        row["readout_neurons"] for arm in result["arms"].values() for row in arm
     } == {120}
     assert all(
-        row["population_preserved"]
-        for arm in result["arms"].values()
-        for row in arm
+        row["population_preserved"] for arm in result["arms"].values() for row in arm
     )
     assert result["verdict"]["landing_passed"] is False
+
+
+def test_neuromuscular_result_matches_registered_source_and_population():
+    result = json.loads(
+        (
+            Path(__file__).parents[1]
+            / "state"
+            / "c302-neuromuscular-body-dynamics.json"
+        ).read_text(encoding="utf-8")
+    )
+
+    assert result["experiment_id"] == "C302-NEUROMUSCULAR-BODY-DYNAMICS-1"
+    assert result["protocol"]["timestep_ms"] == 0.05
+    assert result["protocol"]["duration_ms"] == 1000.0
+    assert result["protocol"]["stimulus_targets"] == ["PLML", "PLMR"]
+    assert result["manifest"]["cells"] == 397
+    assert result["manifest"]["neurons"] == 302
+    assert result["manifest"]["muscles"] == 95
+    assert result["manifest"]["neural_connections"] == 3363
+    assert result["manifest"]["neuromuscular_connections"] == 552
+    assert result["verdict"]["all_finite"] is True
+    assert result["verdict"]["landing_passed"] is False
+    assert result["arms"]["actual_closed_loop"] == result["arms"]["actual_open_loop"]
 
 
 def test_runtime_binding_locks_named_topology():

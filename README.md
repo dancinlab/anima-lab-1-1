@@ -39,11 +39,23 @@ placement control (ratio 0.390; paired wins 0/5 against every control). The
 biological arrangement therefore has no measured advantage in the GRU
 substrate even after source-declared channel semantics are restored.
 
+The fifth pre-registered stage removes the GRU substrate for this experiment
+and imports the full c302 C conductance model, including 302 neurons, 95
+muscles, HH-style channel gates, calcium dynamics, 552 neuromuscular edges, and
+the source PLML/PLMR current input. A registered 24-segment reduced body closes
+strain feedback onto those source input cells. The runtime was stable and
+deterministic, but the landing rule failed: actual closed-loop touch-evoked
+forward displacement was -4.68260e-10 versus 5.26533e-11 for the neural shuffle.
+Closed and open trajectories were identical because the registered 0.1 pA
+feedback did not change any synaptic event time. This is a measured ineffective
+loop, not evidence against the biological worm.
+
 ```bash
 python -m c302_placement fetch
 python -m c302_placement run
 python -m c302_placement dynamics
 python -m c302_placement dynamics --experiment-id C302-SIGNED-SYNAPSE-DYNAMICS-1
+python -m c302_placement biophysics
 pytest -q tests/test_c302_placement.py
 ```
 

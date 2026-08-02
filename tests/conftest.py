@@ -26,3 +26,15 @@ def full_connectome():
     spec = ExperimentSpec.load(ROOT / "config" / "c302_named_neuron_placement.json")
     source = spec.fetch(ROOT / ".cache" / "c302" / "c302_C_Full.net.nml")
     return load_neuroml(source, spec.source.neuron_component_contains)
+
+
+@pytest.fixture(scope="session")
+def full_neuromuscular_model():
+    from c302_placement.neuroml import load_neuromuscular_neuroml
+    from c302_placement.spec import ExperimentSpec
+
+    spec = ExperimentSpec.load(ROOT / "config" / "c302_named_neuron_placement.json")
+    source = spec.fetch(ROOT / ".cache" / "c302" / "c302_C_Full.net.nml")
+    include_paths = spec.fetch_includes(ROOT / ".cache" / "c302")
+    channel_source = next(path for path in include_paths if path.name == "cell_C.xml")
+    return load_neuromuscular_neuroml(source, channel_source)
