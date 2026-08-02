@@ -222,6 +222,9 @@ class ConsciousnessEngine:
         self._coupling: Optional[torch.Tensor] = None
         # Canonical topologies may lock plasticity to observed edges.
         self._coupling_mask: Optional[torch.Tensor] = None
+        # A named imported topology may also lock the population so mitosis or
+        # merge cannot silently invalidate stable external neuron identities.
+        self._population_locked = False
 
         # Φ Ratchet state
         self._best_phi = 0.0
@@ -391,12 +394,15 @@ class ConsciousnessEngine:
         coupling: torch.Tensor,
         cell_metadata: List[Dict],
         lock_structure: bool = True,
+        lock_population: bool = False,
     ) -> None:
         """Bind stable cell identities and an incoming coupling matrix.
 
         ``coupling[target, source]`` is the influence of the source cell on the
-        target cell. Values must already be normalized to [-1, 1]. When locked,
-        Hebbian learning can update observed weights but cannot invent edges.
+        target cell. Values must already be normalized to [-1, 1]. When the
+        structure is locked, Hebbian learning can update observed weights but
+        cannot invent edges. A population lock preserves stable external cell
+        identities by disabling mitosis and merge for the imported topology.
         """
         matrix = torch.as_tensor(coupling, dtype=torch.float32)
         expected_shape = (self.n_cells, self.n_cells)
@@ -421,6 +427,7 @@ class ConsciousnessEngine:
 
         self._coupling = matrix.detach().clone()
         self._coupling_mask = self._coupling.ne(0) if lock_structure else None
+        self._population_locked = lock_population
         for state, metadata in zip(self.cell_states, cell_metadata):
             state.external_id = metadata["external_id"]
             state.cell_type = metadata.get("cell_type")
@@ -434,7 +441,8 @@ class ConsciousnessEngine:
     # ─── Core step ──────────────────────────────────────
 
     def step(self, x_input: Optional[torch.Tensor] = None,
-             text: Optional[str] = None) -> Dict:
+             text: Optional[str] = None,
+             cell_inputs: Optional[torch.Tensor] = None) -> Dict:
         """Run one consciousness step.
 
         Returns dict with: output, phi_iit, phi_proxy, n_cells, events, tensions, consensus
@@ -446,15 +454,46 @@ class ConsciousnessEngine:
         if text is not None and x_input is None:
             x_input = self._text_to_vec(text)
 
-        # Default: random input
-        if x_input is None:
+        # The canonical broadcast path remains the default. Imported named
+        # topologies can additionally supply one vector per cell, enabling
+        # sensory-only stimulation without a parallel execution engine.
+        if x_input is None and cell_inputs is None:
             x_input = torch.randn(self.cell_dim)
-        if x_input.dim() > 1:
-            x_input = x_input.squeeze(0)
-        if x_input.shape[0] > self.cell_dim:
-            x_input = x_input[:self.cell_dim]
-        elif x_input.shape[0] < self.cell_dim:
-            x_input = F.pad(x_input, (0, self.cell_dim - x_input.shape[0]))
+        if x_input is not None:
+            if x_input.dim() > 1:
+                x_input = x_input.squeeze(0)
+            if x_input.shape[0] > self.cell_dim:
+                x_input = x_input[:self.cell_dim]
+            elif x_input.shape[0] < self.cell_dim:
+                x_input = F.pad(x_input, (0, self.cell_dim - x_input.shape[0]))
+            inputs = x_input.unsqueeze(0).expand(n, -1).clone()
+        else:
+            inputs = torch.zeros(n, self.cell_dim)
+        if cell_inputs is not None:
+            per_cell = torch.as_tensor(cell_inputs, dtype=inputs.dtype)
+            if tuple(per_cell.shape) != (n, self.cell_dim):
+                raise ValueError(
+                    f"cell_inputs shape {tuple(per_cell.shape)} does not match "
+                    f"{(n, self.cell_dim)}"
+                )
+            if not torch.isfinite(per_cell).all():
+                raise ValueError("cell_inputs contains a non-finite value")
+            inputs = inputs + per_cell
+
+        # All coupling terms read the same pre-step hidden state. Matrix form is
+        # algebraically equivalent to the former nested loop and keeps the
+        # canonical engine tractable at the complete 302-neuron scale.
+        hidden_inputs = []
+        for state in self.cell_states:
+            if self.hidden_dim >= self.cell_dim:
+                hidden_inputs.append(state.hidden[:self.cell_dim])
+            else:
+                hidden_inputs.append(
+                    F.pad(state.hidden, (0, self.cell_dim - self.hidden_dim))
+                )
+        hidden_matrix = torch.stack(hidden_inputs)
+        if self._coupling is not None:
+            inputs = inputs + PSI_COUPLING * (self._coupling @ hidden_matrix)
 
         # 1. Process each cell with coupling influence
         outputs = []
@@ -462,21 +501,11 @@ class ConsciousnessEngine:
             cell = self.cell_modules[i]
             state = self.cell_states[i]
 
-            # Coupling influence: Ψ_coupling weighted sum of other cells' hiddens
-            coupled_input = x_input.clone()
-            for j in range(n):
-                if i != j and self._coupling is not None:
-                    c = self._coupling[i, j].item()
-                    if abs(c) > 1e-6:
-                        h_proj = state.hidden[:self.cell_dim] if self.hidden_dim >= self.cell_dim else F.pad(state.hidden, (0, self.cell_dim - self.hidden_dim))
-                        j_h = self.cell_states[j].hidden[:self.cell_dim] if self.hidden_dim >= self.cell_dim else F.pad(self.cell_states[j].hidden, (0, self.cell_dim - self.hidden_dim))
-                        coupled_input = coupled_input + PSI_COUPLING * c * j_h
-
             # Tension from history
             tension = state.avg_tension if state.tension_history else 0.5
 
             # Process
-            output, new_h = cell(coupled_input, tension, state.hidden)
+            output, new_h = cell(inputs[i], tension, state.hidden)
 
             # Tension as deviation from the WHOLE population, computed after
             # the loop rather than during it.
@@ -565,6 +594,7 @@ class ConsciousnessEngine:
             'events': events,
             'step': self._step,
             'best_phi': self._best_phi,
+            'cell_outputs': outputs_tensor.detach().clone(),
         }
 
     # ─── Faction consensus ──────────────────────────────
@@ -660,6 +690,8 @@ class ConsciousnessEngine:
     def _check_splits(self) -> List[Dict]:
         """Split cells with sustained high tension."""
         events = []
+        if self._population_locked:
+            return events
         if self.n_cells >= self.max_cells:
             return events
 
@@ -767,6 +799,8 @@ class ConsciousnessEngine:
         See docs/consciousness-gate-audit.md.
         """
         events = []
+        if self._population_locked:
+            return events
         if self.n_cells <= self.min_cells:
             return events
 

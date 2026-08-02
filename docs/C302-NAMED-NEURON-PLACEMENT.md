@@ -48,10 +48,47 @@ This stage lands only if:
 Runtime Phi, tension stability, and stimulated sensory-to-motor transmission
 are the next stage. No claim about those outcomes is made by this preflight.
 
+## Phase 2 preregistration: runtime dynamics
+
+`C302-NAMED-NEURON-DYNAMICS-1` uses the same five arms and the same pinned
+NeuroML source. All protocol values live in the existing config SSOT before the
+result is generated:
+
+- seeds 302–306;
+- 8-dimensional cell input/output and 16-dimensional hidden state;
+- 12 zero-input warmup steps, 6 sensory-stimulus steps, and 12 recovery steps;
+- one deterministic unit-norm stimulus vector per seed, delivered only to cells
+  whose canonical c302 type contains `sensory`;
+- a cloned zero-input sham trajectory from the identical warmed state;
+- an exponential spatial kernel whose scale is the actual connectome's median
+  observed edge length and is held fixed across every control arm.
+
+The spatial kernel acts before incoming-sum normalization. It changes relative
+incoming weights but not the canonical chemical direction or bidirectional gap
+junction rule. The imported population and structural edge mask stay locked for
+the whole run; no named neuron may be removed, divided, or replaced.
+
+The primary metric is motor response AUC: at each post-warmup step, take the RMS
+difference between stimulated and sham per-cell outputs over every canonical
+motor neuron, then sum across stimulus and recovery. Secondary readings are
+motor peak, sensory AUC, motor/sensory transmission, signed and absolute Phi
+delta AUC, tension delta AUC, and sham tension coefficient of variation.
+
+The landing rule is fixed before execution. `actual` must have a higher median
+primary metric than every control, must beat each control on at least four of
+five paired seeds, and every arm must preserve all 302 cells. If it fails, the
+named placement is not promoted as advantageous. Phi and tension remain
+descriptive secondary measurements and cannot rescue a failed primary result.
+
+This tests whether the imported structure carries load in the Anima cell
+substrate. It does not reproduce c302 membrane biophysics, simulate muscles, or
+establish consciousness.
+
 ## Run
 
 ```bash
 python -m c302_placement fetch
 python -m c302_placement run
+python -m c302_placement dynamics
 pytest -q tests/test_c302_placement.py
 ```

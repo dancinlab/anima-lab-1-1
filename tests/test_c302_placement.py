@@ -1,3 +1,4 @@
+import copy
 import random
 from pathlib import Path
 
@@ -12,6 +13,7 @@ from c302_placement.controls import (
 )
 from c302_placement.metrics import measure
 from c302_placement.neuroml import load_neuroml
+from c302_placement.runtime import connection_length_scale, coupling_matrix
 
 FIXTURE = Path(__file__).parent / "fixtures" / "c302_minimal.net.nml"
 
@@ -84,6 +86,7 @@ def test_runtime_binding_locks_named_topology():
         model,
         spec.runtime.coupling_normalization,
         spec.runtime.lock_structure,
+        lock_population=spec.runtime.lock_population,
     )
 
     assert [cell["external_id"] for cell in engine.status()["cells"]] == [
@@ -117,6 +120,7 @@ def test_full_c302_binds_all_named_runtime_cells(full_connectome):
         full_connectome,
         spec.runtime.coupling_normalization,
         spec.runtime.lock_structure,
+        lock_population=spec.runtime.lock_population,
     )
 
     assert engine.n_cells == 302
@@ -125,3 +129,113 @@ def test_full_c302_binds_all_named_runtime_cells(full_connectome):
     assert {cell["external_id"] for cell in engine.status()["cells"]} == {
         neuron.neuron_id for neuron in full_connectome.neurons
     }
+
+
+def test_spatial_kernel_changes_weights_when_positions_change(full_connectome):
+    scale = connection_length_scale(full_connectome)
+    actual = coupling_matrix(full_connectome, "incoming_sum", "exponential", scale)
+    shuffled = coupling_matrix(
+        shuffle_positions(full_connectome, random.Random(302)),
+        "incoming_sum",
+        "exponential",
+        scale,
+    )
+
+    assert not actual.equal(shuffled)
+    assert actual.abs().sum(dim=1).max().item() <= 1.0 + 1e-6
+
+
+def test_named_topology_accepts_cell_specific_input_and_locks_population():
+    torch = pytest.importorskip("torch")
+    from c302_placement.runtime import bind_connectome
+    from consciousness_engine import ConsciousnessEngine
+
+    model = load_neuroml(FIXTURE, "Neuron")
+    torch.manual_seed(302)
+    engine = ConsciousnessEngine(
+        cell_dim=4,
+        hidden_dim=4,
+        initial_cells=len(model.neurons),
+        max_cells=5,
+        phi_ratchet=False,
+    )
+    bind_connectome(
+        engine,
+        model,
+        "incoming_sum",
+        lock_structure=True,
+        lock_population=True,
+    )
+    sham = engine.step(cell_inputs=torch.zeros(3, 4))
+    stimulus = torch.zeros(3, 4)
+    stimulus[2, 0] = 1.0
+    driven = engine.step(cell_inputs=stimulus)
+
+    assert driven["cell_outputs"].shape == (3, 4)
+    assert not torch.equal(sham["cell_outputs"], driven["cell_outputs"])
+    for state in engine.cell_states:
+        state.tension_history = [1.0] * engine.split_patience
+    assert engine._check_splits() == []
+    engine._inter_tension_history[(0, 1)] = [0.0] * engine.merge_patience
+    assert engine._check_merges() == []
+    assert engine.n_cells == 3
+
+
+def test_cell_specific_input_rejects_wrong_shape():
+    torch = pytest.importorskip("torch")
+    from consciousness_engine import ConsciousnessEngine
+
+    engine = ConsciousnessEngine(
+        cell_dim=4, hidden_dim=4, initial_cells=3, max_cells=3, phi_ratchet=False
+    )
+    with pytest.raises(ValueError, match="cell_inputs shape"):
+        engine.step(cell_inputs=torch.zeros(2, 4))
+
+
+def test_zero_cell_inputs_preserve_broadcast_runtime_path():
+    torch = pytest.importorskip("torch")
+    from consciousness_engine import ConsciousnessEngine
+
+    torch.manual_seed(302)
+    broadcast = ConsciousnessEngine(
+        cell_dim=4, hidden_dim=4, initial_cells=3, max_cells=3, phi_ratchet=False
+    )
+    explicit = copy.deepcopy(broadcast)
+    drive = torch.tensor([0.1, -0.2, 0.3, -0.4])
+
+    original = broadcast.step(x_input=drive)
+    upgraded = explicit.step(x_input=drive, cell_inputs=torch.zeros(3, 4))
+
+    assert torch.equal(original["cell_outputs"], upgraded["cell_outputs"])
+    assert torch.equal(original["output"], upgraded["output"])
+
+
+def test_vectorized_coupling_matches_canonical_sum():
+    torch = pytest.importorskip("torch")
+    from consciousness_engine import PSI_COUPLING, ConsciousnessEngine
+
+    torch.manual_seed(302)
+    engine = ConsciousnessEngine(
+        cell_dim=4, hidden_dim=4, initial_cells=3, max_cells=3, phi_ratchet=False
+    )
+    drive = torch.tensor([0.1, -0.2, 0.3, -0.4])
+    engine.step(x_input=drive)
+    reference = copy.deepcopy(engine)
+    expected = []
+    for target, (module, state) in enumerate(
+        zip(reference.cell_modules, reference.cell_states, strict=True)
+    ):
+        cell_input = drive.clone()
+        for source, source_state in enumerate(reference.cell_states):
+            if source != target:
+                cell_input += (
+                    PSI_COUPLING
+                    * reference._coupling[target, source].item()
+                    * source_state.hidden
+                )
+        output, _ = module(cell_input, state.avg_tension, state.hidden)
+        expected.append(output)
+
+    result = engine.step(x_input=drive)
+
+    assert torch.allclose(result["cell_outputs"], torch.stack(expected), atol=1e-7)

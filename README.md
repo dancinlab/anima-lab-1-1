@@ -10,6 +10,16 @@ position-shuffled, degree-preserving connection-shuffled, flat, and random 3D
 placements while preserving stable neuron identities.
 The same canonical model can be bound into `ConsciousnessEngine`; its structural
 mask keeps Hebbian learning on observed edges instead of densifying the graph.
+The second pre-registered stage adds cell-specific sensory input, stable
+302-neuron population identity, and spatially weighted coupling to that same
+runtime. It compares stimulated-versus-sham motor response over five seeds.
+
+```bash
+python -m c302_placement fetch
+python -m c302_placement run
+python -m c302_placement dynamics
+pytest -q tests/test_c302_placement.py
+```
 
 ---
 

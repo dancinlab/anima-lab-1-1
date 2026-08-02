@@ -129,7 +129,7 @@
         "name": "c302 named-neuron topology",
         "role": "canonical NeuroML 입력을 런타임 세포 배선으로 승격",
         "id": "c302-named-neuron-topology",
-        "detail": "config/c302_named_neuron_placement.json이 revision·checksum·seed·통제군·정규화의 SSOT다. c302_placement는 302개 이름·종류·좌표와 chemical/electrical edge를 보존하고, ConsciousnessEngine.configure_topology는 coupling[target,source]와 structural mask를 적용한다.",
+        "detail": "config/c302_named_neuron_placement.json이 revision·checksum·seed·통제군·정규화·동역학 프로토콜의 SSOT다. c302_placement는 302개 이름·종류·좌표와 chemical/electrical edge를 보존하고, ConsciousnessEngine.configure_topology는 coupling[target,source], structural mask, stable population lock을 적용한다.",
         "children": [
           {
             "name": "NeuroML adapter",
@@ -147,7 +147,13 @@
             "name": "runtime topology binding",
             "role": "이름 있는 세포와 관측 edge를 실행 엔진에 고정",
             "id": "c302-runtime-binding",
-            "detail": "incoming-sum 정규화 뒤 chemical은 방향성을, electrical은 양방향성을 보존한다. structural mask는 Hebbian update가 관측되지 않은 edge를 새로 만들지 못하게 한다."
+            "detail": "incoming-sum 정규화 뒤 chemical은 방향성을, electrical은 양방향성을 보존한다. structural mask는 Hebbian update가 관측되지 않은 edge를 새로 만들지 못하게 하고 population lock은 이름 있는 302개 뉴런의 분열·병합을 막는다."
+          },
+          {
+            "name": "runtime dynamics",
+            "role": "감각 뉴런 자극에서 운동 뉴런 응답까지 paired sham 측정",
+            "id": "c302-runtime-dynamics",
+            "detail": "기존 ConsciousnessEngine의 cell_inputs API와 공간 exponential coupling을 사용한다. actual과 4개 통제군을 seeds 302-306에서 비교하며 motor response AUC가 사전등록된 주 지표다."
           }
         ]
       },

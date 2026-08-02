@@ -3,7 +3,23 @@
   "rewiring_swaps_per_edge": 1.0,
   "runtime": {
     "coupling_normalization": "incoming_sum",
-    "lock_structure": true
+    "lock_structure": true,
+    "lock_population": true
+  },
+  "dynamics": {
+    "experiment_id": "C302-NAMED-NEURON-DYNAMICS-1",
+    "seeds": [302, 303, 304, 305, 306],
+    "cell_dim": 8,
+    "hidden_dim": 16,
+    "phi_ratchet": false,
+    "warmup_steps": 12,
+    "stimulus_steps": 6,
+    "recovery_steps": 12,
+    "stimulus_amplitude": 1.0,
+    "spatial_kernel": "exponential",
+    "distance_scale": "actual_median_connection_length",
+    "primary_metric": "motor_response_auc",
+    "minimum_pairwise_wins": 4
   },
   "seed": 302,
   "source": {

@@ -29,6 +29,24 @@ class SourceSpec:
 class RuntimeSpec:
     coupling_normalization: str
     lock_structure: bool
+    lock_population: bool
+
+
+@dataclass(frozen=True, slots=True)
+class DynamicsSpec:
+    experiment_id: str
+    seeds: tuple[int, ...]
+    cell_dim: int
+    hidden_dim: int
+    phi_ratchet: bool
+    warmup_steps: int
+    stimulus_steps: int
+    recovery_steps: int
+    stimulus_amplitude: float
+    spatial_kernel: str
+    distance_scale: str
+    primary_metric: str
+    minimum_pairwise_wins: int
 
 
 @dataclass(frozen=True, slots=True)
@@ -39,6 +57,7 @@ class ExperimentSpec:
     rewiring_swaps_per_edge: float
     source: SourceSpec
     runtime: RuntimeSpec
+    dynamics: DynamicsSpec
 
     @classmethod
     def load(cls, path: Path) -> ExperimentSpec:
@@ -50,6 +69,12 @@ class ExperimentSpec:
             rewiring_swaps_per_edge=float(raw["rewiring_swaps_per_edge"]),
             source=SourceSpec(**raw["source"]),
             runtime=RuntimeSpec(**raw["runtime"]),
+            dynamics=DynamicsSpec(
+                **{
+                    **raw["dynamics"],
+                    "seeds": tuple(int(seed) for seed in raw["dynamics"]["seeds"]),
+                }
+            ),
         )
 
     def fetch(self, destination: Path) -> Path:

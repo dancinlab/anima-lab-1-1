@@ -1,4 +1,4 @@
-"""Canonical C. elegans named-neuron placement experiment."""
+"""Canonical C. elegans named-neuron placement and dynamics experiment."""
 
 from .model import Connection, Connectome, Neuron, Position
 from .neuroml import load_neuroml
