@@ -46,6 +46,8 @@ class DynamicsSpec:
     stimulus_amplitude: float
     spatial_kernel: str
     distance_scale: str
+    synapse_model: str
+    runtime_timestep_ms: float
     stimulus_include_roles: tuple[str, ...]
     stimulus_exclude_roles: tuple[str, ...]
     readout_include_roles: tuple[str, ...]

@@ -169,6 +169,39 @@ carries signal; it does not show an advantage for the biological arrangement.
 
 Canonical result: `state/c302-exclusive-motor-dynamics.json`.
 
+## Phase 4 preregistration: canonical synapse channels
+
+`C302-SIGNED-SYNAPSE-DYNAMICS-1` is registered before its first result. It
+tests whether the failed phase 3 verdict was caused by collapsing every c302
+edge into the same positive, instantaneous coupling. The pinned NeuroML source
+is the sole authority for each connection's synapse identifier and for each
+synapse definition. No neuron, transmitter, receptor, or edge polarity list is
+copied into experiment code or configuration.
+
+The runtime adapter must preserve the source-declared neuron-to-neuron
+mechanisms as separate channels: excitatory `expTwoSynapse`, inhibitory
+`expTwoSynapse`, and bidirectional electrical `gapJunction`. Chemical channel
+sign follows the declared reversal potential relative to the source cell's
+initial membrane potential; rise and decay constants come from the NeuroML
+definition. Electrical coupling is diffusive rather than a second positive
+chemical edge. The registered runtime timestep is 1 ms; this is a channel
+filter approximation inside the canonical GRU runtime, not a claim to execute
+the full NeuroML membrane model.
+
+All other causal controls remain phase 3's: the pinned 302-neuron source, five
+placement/topology arms, seeds 302-306, sensory stimulation, 120 exclusive-motor
+readout neurons, spatial kernel, fixed population, and primary response AUC.
+Warmup is 20 steps and recovery is 40 steps so the source's 40 ms inhibitory
+decay can be observed. The result lands only if `actual` has a higher median
+primary metric than every control, beats every control in at least four of five
+paired seeds, and every arm preserves 302 cells. A pass supports the complete
+package of signed/filter/diffusive semantics; it will not identify which one is
+causal without a later ablation. A failure does not falsify c302 biophysics,
+because membrane voltage, ion channels, muscles, and environment remain absent.
+
+Canonical result target: `state/c302-signed-synapse-dynamics.json`. No result
+had been generated when this protocol was registered.
+
 ## Run
 
 ```bash

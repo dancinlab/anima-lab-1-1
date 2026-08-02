@@ -89,9 +89,13 @@ def test_dynamics_protocols_share_one_canonical_ssot():
     assert spec.dynamics.experiment_id == "C302-EXCLUSIVE-MOTOR-DYNAMICS-1"
     phase_2 = spec.dynamics_for("C302-NAMED-NEURON-DYNAMICS-1")
     phase_3 = spec.dynamics_for("C302-EXCLUSIVE-MOTOR-DYNAMICS-1")
+    phase_4 = spec.dynamics_for("C302-SIGNED-SYNAPSE-DYNAMICS-1")
     assert phase_2.readout_exclude_roles == ()
     assert phase_3.readout_exclude_roles == ("sensory",)
     assert phase_2.seeds == phase_3.seeds
+    assert phase_4.readout_exclude_roles == ("sensory",)
+    assert phase_4.synapse_model == "neuroml_native_channels"
+    assert phase_4.seeds == phase_3.seeds
 
 
 def test_exclusive_motor_result_matches_registered_population():
