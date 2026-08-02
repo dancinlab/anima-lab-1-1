@@ -7,19 +7,49 @@
     "lock_population": true
   },
   "dynamics": {
-    "experiment_id": "C302-NAMED-NEURON-DYNAMICS-1",
-    "seeds": [302, 303, 304, 305, 306],
-    "cell_dim": 8,
-    "hidden_dim": 16,
-    "phi_ratchet": false,
-    "warmup_steps": 12,
-    "stimulus_steps": 6,
-    "recovery_steps": 12,
-    "stimulus_amplitude": 1.0,
-    "spatial_kernel": "exponential",
-    "distance_scale": "actual_median_connection_length",
-    "primary_metric": "motor_response_auc",
-    "minimum_pairwise_wins": 4
+    "default_experiment_id": "C302-EXCLUSIVE-MOTOR-DYNAMICS-1",
+    "experiments": [
+      {
+        "experiment_id": "C302-NAMED-NEURON-DYNAMICS-1",
+        "result_path": "state/c302-named-neuron-dynamics.json",
+        "seeds": [302, 303, 304, 305, 306],
+        "cell_dim": 8,
+        "hidden_dim": 16,
+        "phi_ratchet": false,
+        "warmup_steps": 12,
+        "stimulus_steps": 6,
+        "recovery_steps": 12,
+        "stimulus_amplitude": 1.0,
+        "spatial_kernel": "exponential",
+        "distance_scale": "actual_median_connection_length",
+        "stimulus_include_roles": ["sensory"],
+        "stimulus_exclude_roles": [],
+        "readout_include_roles": ["motor"],
+        "readout_exclude_roles": [],
+        "primary_metric": "motor_response_auc",
+        "minimum_pairwise_wins": 4
+      },
+      {
+        "experiment_id": "C302-EXCLUSIVE-MOTOR-DYNAMICS-1",
+        "result_path": "state/c302-exclusive-motor-dynamics.json",
+        "seeds": [302, 303, 304, 305, 306],
+        "cell_dim": 8,
+        "hidden_dim": 16,
+        "phi_ratchet": false,
+        "warmup_steps": 12,
+        "stimulus_steps": 6,
+        "recovery_steps": 12,
+        "stimulus_amplitude": 1.0,
+        "spatial_kernel": "exponential",
+        "distance_scale": "actual_median_connection_length",
+        "stimulus_include_roles": ["sensory"],
+        "stimulus_exclude_roles": [],
+        "readout_include_roles": ["motor"],
+        "readout_exclude_roles": ["sensory"],
+        "primary_metric": "readout_response_auc",
+        "minimum_pairwise_wins": 4
+      }
+    ]
   },
   "seed": 302,
   "source": {

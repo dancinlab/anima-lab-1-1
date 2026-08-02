@@ -35,6 +35,7 @@ class RuntimeSpec:
 @dataclass(frozen=True, slots=True)
 class DynamicsSpec:
     experiment_id: str
+    result_path: str
     seeds: tuple[int, ...]
     cell_dim: int
     hidden_dim: int
@@ -45,6 +46,10 @@ class DynamicsSpec:
     stimulus_amplitude: float
     spatial_kernel: str
     distance_scale: str
+    stimulus_include_roles: tuple[str, ...]
+    stimulus_exclude_roles: tuple[str, ...]
+    readout_include_roles: tuple[str, ...]
+    readout_exclude_roles: tuple[str, ...]
     primary_metric: str
     minimum_pairwise_wins: int
 
@@ -57,25 +62,64 @@ class ExperimentSpec:
     rewiring_swaps_per_edge: float
     source: SourceSpec
     runtime: RuntimeSpec
-    dynamics: DynamicsSpec
+    default_dynamics_experiment_id: str
+    dynamics_experiments: tuple[DynamicsSpec, ...]
 
     @classmethod
     def load(cls, path: Path) -> ExperimentSpec:
         raw = json.loads(path.read_text(encoding="utf-8"))
-        return cls(
+        dynamics = raw["dynamics"]
+        experiments = tuple(
+            DynamicsSpec(
+                **{
+                    **experiment,
+                    "seeds": tuple(int(seed) for seed in experiment["seeds"]),
+                    "stimulus_include_roles": tuple(
+                        experiment["stimulus_include_roles"]
+                    ),
+                    "stimulus_exclude_roles": tuple(
+                        experiment["stimulus_exclude_roles"]
+                    ),
+                    "readout_include_roles": tuple(
+                        experiment["readout_include_roles"]
+                    ),
+                    "readout_exclude_roles": tuple(
+                        experiment["readout_exclude_roles"]
+                    ),
+                }
+            )
+            for experiment in dynamics["experiments"]
+        )
+        spec = cls(
             experiment_id=raw["experiment_id"],
             seed=int(raw["seed"]),
             variants=tuple(raw["variants"]),
             rewiring_swaps_per_edge=float(raw["rewiring_swaps_per_edge"]),
             source=SourceSpec(**raw["source"]),
             runtime=RuntimeSpec(**raw["runtime"]),
-            dynamics=DynamicsSpec(
-                **{
-                    **raw["dynamics"],
-                    "seeds": tuple(int(seed) for seed in raw["dynamics"]["seeds"]),
-                }
-            ),
+            default_dynamics_experiment_id=dynamics[
+                "default_experiment_id"
+            ],
+            dynamics_experiments=experiments,
         )
+        spec.dynamics_for()
+        return spec
+
+    @property
+    def dynamics(self) -> DynamicsSpec:
+        """Return the SSOT-selected default dynamics protocol."""
+        return self.dynamics_for()
+
+    def dynamics_for(self, experiment_id: str | None = None) -> DynamicsSpec:
+        selected = experiment_id or self.default_dynamics_experiment_id
+        matches = [
+            experiment
+            for experiment in self.dynamics_experiments
+            if experiment.experiment_id == selected
+        ]
+        if len(matches) != 1:
+            raise ValueError(f"unknown or duplicate dynamics experiment: {selected}")
+        return matches[0]
 
     def fetch(self, destination: Path) -> Path:
         destination.parent.mkdir(parents=True, exist_ok=True)

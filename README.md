@@ -22,6 +22,11 @@ overlap: 27 neurons are both sensory and motor, so the registered motor readout
 contains a direct-stimulation component. The failed result remains canonical;
 that limitation is not repaired post hoc.
 
+The third pre-registered stage keeps the sensory stimulus but reads only the 120
+motor neurons without a sensory role. This removes all 27 directly stimulated
+dual-role neurons from the primary metric while reusing the canonical dynamics
+engine and SSOT. Its result is not yet generated.
+
 ```bash
 python -m c302_placement fetch
 python -m c302_placement run

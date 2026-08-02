@@ -116,11 +116,36 @@ experiment, not a rewritten phase 2 score.
 
 Canonical result: `state/c302-named-neuron-dynamics.json`.
 
+## Phase 3 preregistration: exclusive-motor readout
+
+`C302-EXCLUSIVE-MOTOR-DYNAMICS-1` is registered before its first result. It
+reuses the pinned source, five control arms, seeds, warmed runtime state,
+stimulus, spatial kernel, and landing rule from phase 2. The generic dynamics
+selector is configured from the same JSON SSOT; neuron names are not copied
+into code or a second list.
+
+The sole experimental change is the readout population. Stimulation still goes
+to all 111 neurons carrying the canonical `sensory` role. The primary readout
+includes neurons carrying `motor` and excludes every neuron also carrying
+`sensory`, yielding 120 exclusive-motor neurons. Therefore no primary-readout
+cell receives the external stimulus directly. The primary metric is their
+stimulated-versus-sham response AUC.
+
+The result lands only if `actual` has a higher median primary metric than every
+control, beats each control in at least four of five paired seeds, and all arms
+preserve 302 cells. Phase 2 remains immutable evidence; phase 3 neither replaces
+nor rescues its failed verdict. This phase isolates topology-mediated runtime
+transmission, but still does not reproduce membrane biophysics or muscles.
+
+Canonical result target: `state/c302-exclusive-motor-dynamics.json`. No result
+had been generated when this protocol was registered.
+
 ## Run
 
 ```bash
 python -m c302_placement fetch
 python -m c302_placement run
 python -m c302_placement dynamics
+python -m c302_placement dynamics --experiment-id C302-NAMED-NEURON-DYNAMICS-1
 pytest -q tests/test_c302_placement.py
 ```

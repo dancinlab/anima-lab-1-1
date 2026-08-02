@@ -13,15 +13,31 @@ from .controls import build_variants
 from .model import Connectome
 from .neuroml import load_neuroml
 from .runtime import bind_connectome, connection_length_scale
-from .spec import ExperimentSpec
+from .spec import DynamicsSpec, ExperimentSpec
 
 
-def _role_indices(connectome: Connectome, role: str) -> list[int]:
-    return [
-        index
-        for index, neuron in enumerate(connectome.neurons)
-        if role in {part.strip() for part in neuron.neuron_type.lower().split(";")}
-    ]
+def _role_indices(
+    connectome: Connectome,
+    include_roles: tuple[str, ...],
+    exclude_roles: tuple[str, ...],
+) -> list[int]:
+    include = {role.lower() for role in include_roles}
+    exclude = {role.lower() for role in exclude_roles}
+    if not include:
+        raise ValueError("role selection requires at least one included role")
+    indices = []
+    for index, neuron in enumerate(connectome.neurons):
+        roles = {
+            part.strip() for part in neuron.neuron_type.lower().split(";")
+        }
+        if include.issubset(roles) and roles.isdisjoint(exclude):
+            indices.append(index)
+    if not indices:
+        raise ValueError(
+            f"role selection contains no neurons: include={sorted(include)}, "
+            f"exclude={sorted(exclude)}"
+        )
+    return indices
 
 
 def _response_rms(delta, indices: list[int]) -> float:
@@ -34,13 +50,13 @@ def _run_arm(
     connectome: Connectome,
     reference_distance_scale: float,
     spec: ExperimentSpec,
+    dynamics: DynamicsSpec,
     seed: int,
 ) -> dict:
     import torch
 
     from consciousness_engine import ConsciousnessEngine
 
-    dynamics = spec.dynamics
     torch.manual_seed(seed)
     engine = ConsciousnessEngine(
         cell_dim=dynamics.cell_dim,
@@ -65,8 +81,16 @@ def _run_arm(
 
     stimulated = copy.deepcopy(engine)
     sham = copy.deepcopy(engine)
-    sensory = _role_indices(connectome, "sensory")
-    motor = _role_indices(connectome, "motor")
+    stimulus_indices = _role_indices(
+        connectome,
+        dynamics.stimulus_include_roles,
+        dynamics.stimulus_exclude_roles,
+    )
+    readout_indices = _role_indices(
+        connectome,
+        dynamics.readout_include_roles,
+        dynamics.readout_exclude_roles,
+    )
 
     generator = torch.Generator().manual_seed(seed)
     stimulus_vector = (
@@ -76,7 +100,7 @@ def _run_arm(
         stimulus_vector / stimulus_vector.norm() * dynamics.stimulus_amplitude
     )
     stimulus = zero.clone()
-    stimulus[sensory] = stimulus_vector
+    stimulus[stimulus_indices] = stimulus_vector
 
     motor_trace: list[float] = []
     sensory_trace: list[float] = []
@@ -90,8 +114,8 @@ def _run_arm(
         stimulated_result = stimulated.step(cell_inputs=active_input)
         sham_result = sham.step(cell_inputs=zero)
         delta = stimulated_result["cell_outputs"] - sham_result["cell_outputs"]
-        motor_trace.append(_response_rms(delta, motor))
-        sensory_trace.append(_response_rms(delta, sensory))
+        motor_trace.append(_response_rms(delta, readout_indices))
+        sensory_trace.append(_response_rms(delta, stimulus_indices))
         phi_delta_trace.append(
             float(stimulated_result["phi_iit"] - sham_result["phi_iit"])
         )
@@ -109,8 +133,15 @@ def _run_arm(
     sham_tension_mean = fmean(sham_tension_trace)
     return {
         "seed": seed,
-        "sensory_neurons": len(sensory),
-        "motor_neurons": len(motor),
+        "stimulus_neurons": len(stimulus_indices),
+        "readout_neurons": len(readout_indices),
+        "sensory_neurons": len(stimulus_indices),
+        "motor_neurons": len(readout_indices),
+        "readout_response_auc": sum(motor_trace),
+        "readout_response_peak": max(motor_trace),
+        "stimulus_response_auc": sum(sensory_trace),
+        "readout_stimulus_transmission": sum(motor_trace)
+        / max(sum(sensory_trace), 1e-12),
         "motor_response_auc": sum(motor_trace),
         "motor_response_peak": max(motor_trace),
         "sensory_response_auc": sum(sensory_trace),
@@ -135,6 +166,10 @@ def _summarize(seed_results: list[dict]) -> dict:
         "phi_absolute_delta_auc",
         "tension_delta_auc",
         "sham_tension_cv",
+        "readout_response_auc",
+        "readout_response_peak",
+        "stimulus_response_auc",
+        "readout_stimulus_transmission",
     )
     return {
         metric: {
@@ -145,11 +180,17 @@ def _summarize(seed_results: list[dict]) -> dict:
     }
 
 
-def run_dynamics(spec_path: Path, source_path: Path, output_path: Path) -> dict:
+def run_dynamics(
+    spec_path: Path,
+    source_path: Path,
+    output_path: Path,
+    experiment_id: str | None = None,
+) -> dict:
     spec = ExperimentSpec.load(spec_path)
-    if spec.dynamics.distance_scale != "actual_median_connection_length":
+    dynamics = spec.dynamics_for(experiment_id)
+    if dynamics.distance_scale != "actual_median_connection_length":
         raise ValueError(
-            f"unsupported distance scale: {spec.dynamics.distance_scale}"
+            f"unsupported distance scale: {dynamics.distance_scale}"
         )
     actual = load_neuroml(source_path, spec.source.neuron_component_contains)
     variants = build_variants(
@@ -158,13 +199,13 @@ def run_dynamics(spec_path: Path, source_path: Path, output_path: Path) -> dict:
     distance_scale = connection_length_scale(actual)
     arms = {
         name: [
-            _run_arm(variant, distance_scale, spec, seed)
-            for seed in spec.dynamics.seeds
+            _run_arm(variant, distance_scale, spec, dynamics, seed)
+            for seed in dynamics.seeds
         ]
         for name, variant in variants.items()
     }
     summaries = {name: _summarize(results) for name, results in arms.items()}
-    primary = spec.dynamics.primary_metric
+    primary = dynamics.primary_metric
     controls = [name for name in variants if name != "actual"]
     pairwise_wins = {
         control: sum(
@@ -182,7 +223,7 @@ def run_dynamics(spec_path: Path, source_path: Path, output_path: Path) -> dict:
     landing_passed = (
         actual_median > best_control_median
         and all(
-            wins >= spec.dynamics.minimum_pairwise_wins
+            wins >= dynamics.minimum_pairwise_wins
             for wins in pairwise_wins.values()
         )
         and all(
@@ -192,7 +233,7 @@ def run_dynamics(spec_path: Path, source_path: Path, output_path: Path) -> dict:
         )
     )
     results = {
-        "experiment_id": spec.dynamics.experiment_id,
+        "experiment_id": dynamics.experiment_id,
         "run_at": datetime.now(timezone.utc).isoformat(),
         "source_experiment_id": spec.experiment_id,
         "source": {
@@ -202,18 +243,22 @@ def run_dynamics(spec_path: Path, source_path: Path, output_path: Path) -> dict:
             "sha256": spec.source.sha256,
         },
         "protocol": {
-            "seeds": list(spec.dynamics.seeds),
-            "cell_dim": spec.dynamics.cell_dim,
-            "hidden_dim": spec.dynamics.hidden_dim,
-            "warmup_steps": spec.dynamics.warmup_steps,
-            "stimulus_steps": spec.dynamics.stimulus_steps,
-            "recovery_steps": spec.dynamics.recovery_steps,
-            "stimulus_amplitude": spec.dynamics.stimulus_amplitude,
-            "spatial_kernel": spec.dynamics.spatial_kernel,
-            "distance_scale_rule": spec.dynamics.distance_scale,
+            "seeds": list(dynamics.seeds),
+            "cell_dim": dynamics.cell_dim,
+            "hidden_dim": dynamics.hidden_dim,
+            "warmup_steps": dynamics.warmup_steps,
+            "stimulus_steps": dynamics.stimulus_steps,
+            "recovery_steps": dynamics.recovery_steps,
+            "stimulus_amplitude": dynamics.stimulus_amplitude,
+            "spatial_kernel": dynamics.spatial_kernel,
+            "distance_scale_rule": dynamics.distance_scale,
             "distance_scale": distance_scale,
+            "stimulus_include_roles": list(dynamics.stimulus_include_roles),
+            "stimulus_exclude_roles": list(dynamics.stimulus_exclude_roles),
+            "readout_include_roles": list(dynamics.readout_include_roles),
+            "readout_exclude_roles": list(dynamics.readout_exclude_roles),
             "primary_metric": primary,
-            "minimum_pairwise_wins": spec.dynamics.minimum_pairwise_wins,
+            "minimum_pairwise_wins": dynamics.minimum_pairwise_wins,
         },
         "arms": arms,
         "summaries": summaries,

@@ -14,6 +14,7 @@ from c302_placement.controls import (
 from c302_placement.metrics import measure
 from c302_placement.neuroml import load_neuroml
 from c302_placement.runtime import connection_length_scale, coupling_matrix
+from c302_placement.dynamics import _role_indices
 
 FIXTURE = Path(__file__).parent / "fixtures" / "c302_minimal.net.nml"
 
@@ -62,6 +63,34 @@ def test_full_c302_shape(full_connectome):
         "chemical",
         "electrical",
     }
+
+
+def test_role_selection_excludes_dual_role_neurons(full_connectome):
+    sensory = _role_indices(full_connectome, ("sensory",), ())
+    motor = _role_indices(full_connectome, ("motor",), ())
+    exclusive_motor = _role_indices(
+        full_connectome, ("motor",), ("sensory",)
+    )
+
+    assert len(sensory) == 111
+    assert len(motor) == 147
+    assert len(exclusive_motor) == 120
+    assert set(exclusive_motor).isdisjoint(sensory)
+
+
+def test_dynamics_protocols_share_one_canonical_ssot():
+    from c302_placement.spec import ExperimentSpec
+
+    spec = ExperimentSpec.load(
+        Path(__file__).parents[1] / "config" / "c302_named_neuron_placement.json"
+    )
+
+    assert spec.dynamics.experiment_id == "C302-EXCLUSIVE-MOTOR-DYNAMICS-1"
+    phase_2 = spec.dynamics_for("C302-NAMED-NEURON-DYNAMICS-1")
+    phase_3 = spec.dynamics_for("C302-EXCLUSIVE-MOTOR-DYNAMICS-1")
+    assert phase_2.readout_exclude_roles == ()
+    assert phase_3.readout_exclude_roles == ("sensory",)
+    assert phase_2.seeds == phase_3.seeds
 
 
 def test_runtime_binding_locks_named_topology():
