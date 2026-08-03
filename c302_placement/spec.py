@@ -87,6 +87,13 @@ class BiophysicsSpec:
     proprioceptive_feedback_gain_pa: float
     primary_metric: str
     minimum_pairwise_wins: int
+    release_modes: tuple[str, ...] = ()
+    feedback_gain_ladder_pa: tuple[float, ...] = ()
+    graded_release_vth_mv: float | None = None
+    graded_release_delta_mv: float | None = None
+    graded_release_k_per_ms: float | None = None
+    minimum_relative_change: float = 0.0
+    minimum_monotonic_steps: int = 0
 
 
 @dataclass(frozen=True, slots=True)
@@ -130,6 +137,11 @@ class ExperimentSpec:
                     **experiment,
                     "seeds": tuple(int(seed) for seed in experiment["seeds"]),
                     "controls": tuple(experiment["controls"]),
+                    "release_modes": tuple(experiment.get("release_modes", ())),
+                    "feedback_gain_ladder_pa": tuple(
+                        float(gain)
+                        for gain in experiment.get("feedback_gain_ladder_pa", ())
+                    ),
                 }
             )
             for experiment in biophysics["experiments"]

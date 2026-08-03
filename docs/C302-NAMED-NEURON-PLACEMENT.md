@@ -329,6 +329,43 @@ must not retune phase 5 after observing this failure.
 
 Canonical result: `state/c302-neuromuscular-body-dynamics.json`.
 
+## Phase 6 preregistration: graded release feedback ladder
+
+`C302-GRADED-RELEASE-FEEDBACK-LADDER-1` is registered before its first result
+and does not alter the phase 5 protocol or result. It asks only whether a
+continuous presynaptic-voltage release law lets body strain causally traverse
+the otherwise unchanged canonical c302 neural, neuromuscular, and reduced-body
+loop. It does not retest topology superiority.
+
+The graded arm implements NeuroML `gradedSynapse` dynamics directly:
+`inf = 1 / (1 + exp((Vth - vpre) / delta))`,
+`tau = (1 - inf) / k`, and `ds/dt = (inf - s) / tau`, with the existing pinned
+c302 conductance, reversal potential, connection weight, membrane cells, gap
+junctions, muscle mapping, and body equations unchanged. Because pinned c302 C
+declares event synapses rather than graded parameters, the experimental values
+are explicit in the existing JSON SSOT: `Vth=-35 mV`, `delta=5 mV`, and
+`k=0.025/ms`, matching the canonical NeuroML schema example. The event arm is
+the phase 5 release law and is the mechanism control.
+
+For both `event` and `graded` release, the fixed feedback-gain ladder is 0.1,
+1, 10, and 100 pA per unit strain. Each nonzero closed-loop run is paired by
+seed with an open-loop run of the same release mode and with stimulated/sham
+clones. These four logarithmic rungs are a registered transduction search, not
+post-result tuning; 0.1 pA preserves phase 5 and the upper rungs remain fixed
+before execution.
+
+The primary metric is the absolute relative closed/open change in
+sham-subtracted touch-evoked displacement. A rung qualifies only when that
+change reaches 1% in at least four of five paired seeds. The experiment lands
+only if a graded rung qualifies, the graded median effect is non-decreasing
+across all three successive ladder intervals, the qualifying graded median
+exceeds the event median at the same rung, and every cell/body trajectory is
+finite. Voltage divergence, event disagreement, curvature, muscle activation,
+and wave coherence are diagnostics and cannot rescue a failed primary result.
+
+Canonical result target: `state/c302-graded-release-feedback-ladder.json`. No
+phase 6 result had been generated when this protocol was registered.
+
 ## Run
 
 ```bash

@@ -34,6 +34,37 @@
         "proprioceptive_feedback_gain_pa": 0.1,
         "primary_metric": "touch_evoked_forward_displacement",
         "minimum_pairwise_wins": 4
+      },
+      {
+        "experiment_id": "C302-GRADED-RELEASE-FEEDBACK-LADDER-1",
+        "result_path": "state/c302-graded-release-feedback-ladder.json",
+        "seeds": [302, 303, 304, 305, 306],
+        "controls": [
+          "actual_closed_loop",
+          "actual_open_loop"
+        ],
+        "timestep_source": "network.recommended_dt_ms",
+        "duration_source": "network.recommended_duration_ms",
+        "stimulus_component_id": "offset_current",
+        "initial_voltage_jitter_mv": 0.01,
+        "synapse_model": "neuroml_graded_release_ladder",
+        "body_model": "damped_segment_chain",
+        "body_segments": 24,
+        "muscle_activation_slope_mv": 5.0,
+        "muscle_activation_time_constant_ms": 50.0,
+        "body_stiffness": 0.15,
+        "body_damping": 0.05,
+        "body_torque_gain": 0.001,
+        "proprioceptive_feedback_gain_pa": 0.1,
+        "release_modes": ["event", "graded"],
+        "feedback_gain_ladder_pa": [0.1, 1.0, 10.0, 100.0],
+        "graded_release_vth_mv": -35.0,
+        "graded_release_delta_mv": 5.0,
+        "graded_release_k_per_ms": 0.025,
+        "primary_metric": "closed_open_touch_displacement_relative_change",
+        "minimum_relative_change": 0.01,
+        "minimum_pairwise_wins": 4,
+        "minimum_monotonic_steps": 3
       }
     ]
   },

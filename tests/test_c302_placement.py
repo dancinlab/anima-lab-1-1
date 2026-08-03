@@ -224,6 +224,31 @@ def test_neuromuscular_protocol_is_registered_in_canonical_ssot():
     assert spec.source.include_files[0].model_path == "examples/cell_C.xml"
 
 
+def test_graded_release_feedback_ladder_is_separately_preregistered():
+    from c302_placement.spec import ExperimentSpec
+
+    spec = ExperimentSpec.load(
+        Path(__file__).parents[1] / "config" / "c302_named_neuron_placement.json"
+    )
+    phase_5 = spec.biophysics
+    phase_6 = spec.biophysics_for("C302-GRADED-RELEASE-FEEDBACK-LADDER-1")
+
+    assert phase_5.experiment_id == "C302-NEUROMUSCULAR-BODY-DYNAMICS-1"
+    assert phase_6.result_path == "state/c302-graded-release-feedback-ladder.json"
+    assert phase_6.synapse_model == "neuroml_graded_release_ladder"
+    assert phase_6.release_modes == ("event", "graded")
+    assert phase_6.feedback_gain_ladder_pa == (0.1, 1.0, 10.0, 100.0)
+    assert phase_6.graded_release_vth_mv == -35.0
+    assert phase_6.graded_release_delta_mv == 5.0
+    assert phase_6.graded_release_k_per_ms == 0.025
+    assert phase_6.primary_metric == (
+        "closed_open_touch_displacement_relative_change"
+    )
+    assert phase_6.minimum_relative_change == 0.01
+    assert phase_6.minimum_pairwise_wins == 4
+    assert phase_6.minimum_monotonic_steps == 3
+
+
 def test_full_neuromuscular_source_restores_cells_channels_and_input(
     full_neuromuscular_model,
 ):
