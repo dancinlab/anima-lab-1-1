@@ -353,6 +353,76 @@ def test_conductance_body_runtime_uses_source_timestep_and_stays_finite(
     assert len(runtime.muscle_segments) == 24
 
 
+def test_graded_release_is_continuous_below_event_threshold(
+    full_neuromuscular_model,
+):
+    import numpy as np
+
+    from c302_placement.spec import ExperimentSpec
+
+    spec = ExperimentSpec.load(
+        Path(__file__).parents[1] / "config" / "c302_named_neuron_placement.json"
+    )
+    protocol = spec.biophysics_for("C302-GRADED-RELEASE-FEEDBACK-LADDER-1")
+    event = ConductanceBodyRuntime(
+        full_neuromuscular_model,
+        protocol,
+        seed=302,
+        feedback_enabled=False,
+        release_mode="event",
+    )
+    graded = ConductanceBodyRuntime(
+        full_neuromuscular_model,
+        protocol,
+        seed=302,
+        feedback_enabled=False,
+        release_mode="graded",
+    )
+
+    event.step(0.0, stimulus_enabled=False, sample=True)
+    graded.step(0.0, stimulus_enabled=False, sample=True)
+
+    assert event.event_count == graded.event_count == 0
+    assert all(np.count_nonzero(group["rise"]) == 0 for group in event.chemical_groups)
+    assert all(
+        np.count_nonzero(group["graded_state"]) == len(group["graded_state"])
+        for group in graded.chemical_groups
+    )
+    assert graded.graded_release_sum > 0
+    assert np.isfinite(graded.voltage).all()
+
+
+def test_explicit_event_release_preserves_phase_5_default(
+    full_neuromuscular_model,
+):
+    import numpy as np
+
+    from c302_placement.spec import ExperimentSpec
+
+    spec = ExperimentSpec.load(
+        Path(__file__).parents[1] / "config" / "c302_named_neuron_placement.json"
+    )
+    default = ConductanceBodyRuntime(
+        full_neuromuscular_model, spec.biophysics, 302, True
+    )
+    explicit = ConductanceBodyRuntime(
+        full_neuromuscular_model,
+        spec.biophysics,
+        302,
+        True,
+        release_mode="event",
+        feedback_gain_pa=spec.biophysics.proprioceptive_feedback_gain_pa,
+    )
+
+    for step in range(50):
+        default.step(step * default.dt, stimulus_enabled=True, sample=True)
+        explicit.step(step * explicit.dt, stimulus_enabled=True, sample=True)
+
+    assert np.array_equal(default.voltage, explicit.voltage)
+    assert np.array_equal(default.curvature, explicit.curvature)
+    assert default.event_count == explicit.event_count
+
+
 def test_exclusive_motor_result_matches_registered_population():
     result = json.loads(
         (
@@ -419,6 +489,41 @@ def test_neuromuscular_result_matches_registered_source_and_population():
     assert result["verdict"]["all_finite"] is True
     assert result["verdict"]["landing_passed"] is False
     assert result["arms"]["actual_closed_loop"] == result["arms"]["actual_open_loop"]
+
+
+def test_graded_release_result_matches_preregistered_ladder():
+    result = json.loads(
+        (
+            Path(__file__).parents[1]
+            / "state"
+            / "c302-graded-release-feedback-ladder.json"
+        ).read_text(encoding="utf-8")
+    )
+
+    assert result["experiment_id"] == "C302-GRADED-RELEASE-FEEDBACK-LADDER-1"
+    assert result["protocol"]["release_modes"] == ["event", "graded"]
+    assert result["protocol"]["feedback_gain_ladder_pa"] == [0.1, 1.0, 10.0, 100.0]
+    assert result["protocol"]["graded_release"] == {
+        "delta_mv": 5.0,
+        "k_per_ms": 0.025,
+        "vth_mv": -35.0,
+    }
+    assert result["verdict"]["qualification_counts"]["event"] == {
+        "0.1": 0,
+        "1.0": 0,
+        "10.0": 0,
+        "100.0": 0,
+    }
+    assert result["verdict"]["qualification_counts"]["graded"] == {
+        "0.1": 5,
+        "1.0": 5,
+        "10.0": 5,
+        "100.0": 5,
+    }
+    assert result["verdict"]["graded_monotonic_steps"] == 3
+    assert result["verdict"]["first_qualifying_gain_pa"] == 0.1
+    assert result["verdict"]["all_finite"] is True
+    assert result["verdict"]["landing_passed"] is True
 
 
 def test_runtime_binding_locks_named_topology():

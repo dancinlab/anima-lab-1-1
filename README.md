@@ -50,12 +50,23 @@ Closed and open trajectories were identical because the registered 0.1 pA
 feedback did not change any synaptic event time. This is a measured ineffective
 loop, not evidence against the biological worm.
 
+The sixth pre-registered stage adds NeuroML graded chemical release as a
+selectable runtime mode and compares it with the unchanged event mode over a
+fixed 0.1–100 pA feedback ladder. It passed its narrow causal-transduction rule:
+graded closed/open displacement changed by 2.79%, 23.55%, 310.66%, and 907.69%
+across the four rungs with 5/5 qualifying seeds at each, while the event control
+remained at 0%. No extra threshold events were created. This establishes an
+analog sensorimotor path in the reduced runtime, not biological locomotion or
+canonical-topology superiority; absolute displacement remains extremely small
+and becomes more negative at high gain.
+
 ```bash
 python -m c302_placement fetch
 python -m c302_placement run
 python -m c302_placement dynamics
 python -m c302_placement dynamics --experiment-id C302-SIGNED-SYNAPSE-DYNAMICS-1
 python -m c302_placement biophysics
+python -m c302_placement biophysics --experiment-id C302-GRADED-RELEASE-FEEDBACK-LADDER-1
 pytest -q tests/test_c302_placement.py
 ```
 

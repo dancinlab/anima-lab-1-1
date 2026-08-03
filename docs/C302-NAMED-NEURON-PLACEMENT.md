@@ -366,6 +366,35 @@ and wave coherence are diagnostics and cannot rescue a failed primary result.
 Canonical result target: `state/c302-graded-release-feedback-ladder.json`. No
 phase 6 result had been generated when this protocol was registered.
 
+## Phase 6 result
+
+The registered 2 release modes x 4 gains x 5 seeds completed. An independent
+rerun reproduced the canonical result exactly after removing only `run_at`.
+
+| feedback gain (pA / unit strain) | event median relative change | graded median relative change | graded qualifying seeds |
+|---:|---:|---:|---:|
+| 0.1 | 0% | 2.7926% | 5/5 |
+| 1 | 0% | 23.5545% | 5/5 |
+| 10 | 0% | 310.6625% | 5/5 |
+| 100 | 0% | 907.6942% | 5/5 |
+
+**Verdict: passed for causal graded transduction.** The first registered rung
+already exceeds the 1% bar in all five seeds, all three successive graded
+medians increase, the event control remains at zero at every rung, and all
+trajectories remain finite. Final stimulated membrane RMS divergence rises
+from 0.00587 mV at 0.1 pA to 0.49064 mV at 100 pA, while threshold-event count
+differences remain zero. The body signal therefore reaches downstream state by
+continuous chemical release rather than by creating extra threshold events.
+
+This landing is deliberately narrow. The absolute displacement change at the
+first rung is only `5.68e-14`, graded open-loop displacement is approximately
+`-2.03e-12`, and high gains make the registered forward metric more negative.
+The experiment establishes an effective analog sensorimotor path in this
+reduced runtime; it does not establish forward locomotion, biological parameter
+validity, or an advantage of canonical c302 topology over shuffled controls.
+
+Canonical result: `state/c302-graded-release-feedback-ladder.json`.
+
 ## Run
 
 ```bash
@@ -375,5 +404,6 @@ python -m c302_placement dynamics
 python -m c302_placement dynamics --experiment-id C302-NAMED-NEURON-DYNAMICS-1
 python -m c302_placement dynamics --experiment-id C302-SIGNED-SYNAPSE-DYNAMICS-1
 python -m c302_placement biophysics
+python -m c302_placement biophysics --experiment-id C302-GRADED-RELEASE-FEEDBACK-LADDER-1
 pytest -q tests/test_c302_placement.py
 ```

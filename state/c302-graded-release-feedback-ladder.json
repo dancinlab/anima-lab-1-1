@@ -1,0 +1,1037 @@
+{
+  "arms": {
+    "event": {
+      "0.1": [
+        {
+          "closed_open_sham_final_voltage_rms_mv": 7.179544062511369e-12,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 4.781788943491885e-09,
+          "closed_open_touch_displacement_delta": 0.0,
+          "closed_open_touch_displacement_relative_change": 0.0,
+          "closed_stimulated_mean_graded_release": 0.0,
+          "closed_touch_evoked_forward_displacement": -4.687293253968726e-10,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.95458804766277,
+          "open_stimulated_mean_graded_release": 0.0,
+          "open_touch_evoked_forward_displacement": -4.687293253968726e-10,
+          "seed": 302
+        },
+        {
+          "closed_open_sham_final_voltage_rms_mv": 2.9373425979160897e-12,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 4.780576676015457e-09,
+          "closed_open_touch_displacement_delta": 0.0,
+          "closed_open_touch_displacement_relative_change": 0.0,
+          "closed_stimulated_mean_graded_release": 0.0,
+          "closed_touch_evoked_forward_displacement": -4.681941669113613e-10,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.95458844097941,
+          "open_stimulated_mean_graded_release": 0.0,
+          "open_touch_evoked_forward_displacement": -4.681941669113613e-10,
+          "seed": 303
+        },
+        {
+          "closed_open_sham_final_voltage_rms_mv": 1.1036326620788196e-12,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 4.781028256461132e-09,
+          "closed_open_touch_displacement_delta": 0.0,
+          "closed_open_touch_displacement_relative_change": 0.0,
+          "closed_stimulated_mean_graded_release": 0.0,
+          "closed_touch_evoked_forward_displacement": -4.679706358329019e-10,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.95458802444853,
+          "open_stimulated_mean_graded_release": 0.0,
+          "open_touch_evoked_forward_displacement": -4.679706358329019e-10,
+          "seed": 304
+        },
+        {
+          "closed_open_sham_final_voltage_rms_mv": 3.756931174424062e-12,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 4.781060387177617e-09,
+          "closed_open_touch_displacement_delta": 0.0,
+          "closed_open_touch_displacement_relative_change": 0.0,
+          "closed_stimulated_mean_graded_release": 0.0,
+          "closed_touch_evoked_forward_displacement": -4.686500110641496e-10,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.954588212991496,
+          "open_stimulated_mean_graded_release": 0.0,
+          "open_touch_evoked_forward_displacement": -4.686500110641496e-10,
+          "seed": 305
+        },
+        {
+          "closed_open_sham_final_voltage_rms_mv": 4.588705785857062e-12,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 4.7805656367423954e-09,
+          "closed_open_touch_displacement_delta": 0.0,
+          "closed_open_touch_displacement_relative_change": 0.0,
+          "closed_stimulated_mean_graded_release": 0.0,
+          "closed_touch_evoked_forward_displacement": -4.682603975226356e-10,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.95458824156539,
+          "open_stimulated_mean_graded_release": 0.0,
+          "open_touch_evoked_forward_displacement": -4.682603975226356e-10,
+          "seed": 306
+        }
+      ],
+      "1.0": [
+        {
+          "closed_open_sham_final_voltage_rms_mv": 7.137251245869093e-11,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 4.781791164090397e-08,
+          "closed_open_touch_displacement_delta": 0.0,
+          "closed_open_touch_displacement_relative_change": 0.0,
+          "closed_stimulated_mean_graded_release": 0.0,
+          "closed_touch_evoked_forward_displacement": -4.687293253968726e-10,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.95458804766277,
+          "open_stimulated_mean_graded_release": 0.0,
+          "open_touch_evoked_forward_displacement": -4.687293253968726e-10,
+          "seed": 302
+        },
+        {
+          "closed_open_sham_final_voltage_rms_mv": 2.8964676494519438e-11,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 4.780576199218872e-08,
+          "closed_open_touch_displacement_delta": 0.0,
+          "closed_open_touch_displacement_relative_change": 0.0,
+          "closed_stimulated_mean_graded_release": 0.0,
+          "closed_touch_evoked_forward_displacement": -4.681941669113613e-10,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.95458844097941,
+          "open_stimulated_mean_graded_release": 0.0,
+          "open_touch_evoked_forward_displacement": -4.681941669113613e-10,
+          "seed": 303
+        },
+        {
+          "closed_open_sham_final_voltage_rms_mv": 1.107579462858059e-11,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 4.781027960330431e-08,
+          "closed_open_touch_displacement_delta": 0.0,
+          "closed_open_touch_displacement_relative_change": 0.0,
+          "closed_stimulated_mean_graded_release": 0.0,
+          "closed_touch_evoked_forward_displacement": -4.679706358329019e-10,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.95458802444853,
+          "open_stimulated_mean_graded_release": 0.0,
+          "open_touch_evoked_forward_displacement": -4.679706358329019e-10,
+          "seed": 304
+        },
+        {
+          "closed_open_sham_final_voltage_rms_mv": 3.650437168059284e-11,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 4.78106174987951e-08,
+          "closed_open_touch_displacement_delta": 0.0,
+          "closed_open_touch_displacement_relative_change": 0.0,
+          "closed_stimulated_mean_graded_release": 0.0,
+          "closed_touch_evoked_forward_displacement": -4.686500110641496e-10,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.954588212991496,
+          "open_stimulated_mean_graded_release": 0.0,
+          "open_touch_evoked_forward_displacement": -4.686500110641496e-10,
+          "seed": 305
+        },
+        {
+          "closed_open_sham_final_voltage_rms_mv": 4.492896961058612e-11,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 4.7805625885026095e-08,
+          "closed_open_touch_displacement_delta": 0.0,
+          "closed_open_touch_displacement_relative_change": 0.0,
+          "closed_stimulated_mean_graded_release": 0.0,
+          "closed_touch_evoked_forward_displacement": -4.682603975226356e-10,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.95458824156539,
+          "open_stimulated_mean_graded_release": 0.0,
+          "open_touch_evoked_forward_displacement": -4.682603975226356e-10,
+          "seed": 306
+        }
+      ],
+      "10.0": [
+        {
+          "closed_open_sham_final_voltage_rms_mv": 7.135535360500144e-10,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 4.781791292757104e-07,
+          "closed_open_touch_displacement_delta": 0.0,
+          "closed_open_touch_displacement_relative_change": 0.0,
+          "closed_stimulated_mean_graded_release": 0.0,
+          "closed_touch_evoked_forward_displacement": -4.687293253968726e-10,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.95458804766277,
+          "open_stimulated_mean_graded_release": 0.0,
+          "open_touch_evoked_forward_displacement": -4.687293253968726e-10,
+          "seed": 302
+        },
+        {
+          "closed_open_sham_final_voltage_rms_mv": 2.894508883564608e-10,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 4.780576186789749e-07,
+          "closed_open_touch_displacement_delta": 0.0,
+          "closed_open_touch_displacement_relative_change": 0.0,
+          "closed_stimulated_mean_graded_release": 0.0,
+          "closed_touch_evoked_forward_displacement": -4.681941669113613e-10,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.95458844097941,
+          "open_stimulated_mean_graded_release": 0.0,
+          "open_touch_evoked_forward_displacement": -4.681941669113613e-10,
+          "seed": 303
+        },
+        {
+          "closed_open_sham_final_voltage_rms_mv": 1.1043463006980184e-10,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 4.781028083980852e-07,
+          "closed_open_touch_displacement_delta": 0.0,
+          "closed_open_touch_displacement_relative_change": 0.0,
+          "closed_stimulated_mean_graded_release": 0.0,
+          "closed_touch_evoked_forward_displacement": -4.679706358329019e-10,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.95458802444853,
+          "open_stimulated_mean_graded_release": 0.0,
+          "open_touch_evoked_forward_displacement": -4.679706358329019e-10,
+          "seed": 304
+        },
+        {
+          "closed_open_sham_final_voltage_rms_mv": 3.647698631741486e-10,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 4.78106164246677e-07,
+          "closed_open_touch_displacement_delta": 0.0,
+          "closed_open_touch_displacement_relative_change": 0.0,
+          "closed_stimulated_mean_graded_release": 0.0,
+          "closed_touch_evoked_forward_displacement": -4.686500110641496e-10,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.954588212991496,
+          "open_stimulated_mean_graded_release": 0.0,
+          "open_touch_evoked_forward_displacement": -4.686500110641496e-10,
+          "seed": 305
+        },
+        {
+          "closed_open_sham_final_voltage_rms_mv": 4.4901617116522076e-10,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 4.78056222911616e-07,
+          "closed_open_touch_displacement_delta": 0.0,
+          "closed_open_touch_displacement_relative_change": 0.0,
+          "closed_stimulated_mean_graded_release": 0.0,
+          "closed_touch_evoked_forward_displacement": -4.682603975226356e-10,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.95458824156539,
+          "open_stimulated_mean_graded_release": 0.0,
+          "open_touch_evoked_forward_displacement": -4.682603975226356e-10,
+          "seed": 306
+        }
+      ],
+      "100.0": [
+        {
+          "closed_open_sham_final_voltage_rms_mv": 7.135497596127708e-09,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 4.781791352026169e-06,
+          "closed_open_touch_displacement_delta": 0.0,
+          "closed_open_touch_displacement_relative_change": 0.0,
+          "closed_stimulated_mean_graded_release": 0.0,
+          "closed_touch_evoked_forward_displacement": -4.687293253968726e-10,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.95458804766277,
+          "open_stimulated_mean_graded_release": 0.0,
+          "open_touch_evoked_forward_displacement": -4.687293253968726e-10,
+          "seed": 302
+        },
+        {
+          "closed_open_sham_final_voltage_rms_mv": 2.8944340952342683e-09,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 4.7805762371228466e-06,
+          "closed_open_touch_displacement_delta": 0.0,
+          "closed_open_touch_displacement_relative_change": 0.0,
+          "closed_stimulated_mean_graded_release": 0.0,
+          "closed_touch_evoked_forward_displacement": -4.681941669113613e-10,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.95458844097941,
+          "open_stimulated_mean_graded_release": 0.0,
+          "open_touch_evoked_forward_displacement": -4.681941669113613e-10,
+          "seed": 303
+        },
+        {
+          "closed_open_sham_final_voltage_rms_mv": 1.104222391531248e-09,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 4.781028132519757e-06,
+          "closed_open_touch_displacement_delta": 0.0,
+          "closed_open_touch_displacement_relative_change": 0.0,
+          "closed_stimulated_mean_graded_release": 0.0,
+          "closed_touch_evoked_forward_displacement": -4.679706358329019e-10,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.95458802444853,
+          "open_stimulated_mean_graded_release": 0.0,
+          "open_touch_evoked_forward_displacement": -4.679706358329019e-10,
+          "seed": 304
+        },
+        {
+          "closed_open_sham_final_voltage_rms_mv": 3.64762697986593e-09,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 4.781061716803979e-06,
+          "closed_open_touch_displacement_delta": 0.0,
+          "closed_open_touch_displacement_relative_change": 0.0,
+          "closed_stimulated_mean_graded_release": 0.0,
+          "closed_touch_evoked_forward_displacement": -4.686500110641496e-10,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.954588212991496,
+          "open_stimulated_mean_graded_release": 0.0,
+          "open_touch_evoked_forward_displacement": -4.686500110641496e-10,
+          "seed": 305
+        },
+        {
+          "closed_open_sham_final_voltage_rms_mv": 4.490109009058757e-09,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 4.7805622898405145e-06,
+          "closed_open_touch_displacement_delta": 0.0,
+          "closed_open_touch_displacement_relative_change": 0.0,
+          "closed_stimulated_mean_graded_release": 0.0,
+          "closed_touch_evoked_forward_displacement": -4.682603975226356e-10,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.95458824156539,
+          "open_stimulated_mean_graded_release": 0.0,
+          "open_touch_evoked_forward_displacement": -4.682603975226356e-10,
+          "seed": 306
+        }
+      ]
+    },
+    "graded": {
+      "0.1": [
+        {
+          "closed_open_sham_final_voltage_rms_mv": 0.0002552966166888537,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 0.0043087118938558485,
+          "closed_open_touch_displacement_delta": 3.695567818234012e-14,
+          "closed_open_touch_displacement_relative_change": 0.03297550341852449,
+          "closed_stimulated_mean_graded_release": 0.9018594907804072,
+          "closed_touch_evoked_forward_displacement": -1.083745277108602e-12,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.48657524435547,
+          "open_stimulated_mean_graded_release": 0.901859498354507,
+          "open_touch_evoked_forward_displacement": -1.120700955290942e-12,
+          "seed": 302
+        },
+        {
+          "closed_open_sham_final_voltage_rms_mv": 0.00025529387111906845,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 0.005868165003027711,
+          "closed_open_touch_displacement_delta": 5.681218438356603e-14,
+          "closed_open_touch_displacement_relative_change": 0.02792561670445924,
+          "closed_stimulated_mean_graded_release": 0.9018597146286558,
+          "closed_touch_evoked_forward_displacement": -1.9775989079413565e-12,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.48663124669612,
+          "open_stimulated_mean_graded_release": 0.9018597221200746,
+          "open_touch_evoked_forward_displacement": -2.0344110923249225e-12,
+          "seed": 303
+        },
+        {
+          "closed_open_sham_final_voltage_rms_mv": 0.0002553012417243343,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 0.004311215604734306,
+          "closed_open_touch_displacement_delta": 3.8872245143196817e-14,
+          "closed_open_touch_displacement_relative_change": 0.03180280566113118,
+          "closed_stimulated_mean_graded_release": 0.9018611171040972,
+          "closed_touch_evoked_forward_displacement": -1.1834175602718574e-12,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.4865923759204,
+          "open_stimulated_mean_graded_release": 0.9018611246874846,
+          "open_touch_evoked_forward_displacement": -1.2222898054150542e-12,
+          "seed": 304
+        },
+        {
+          "closed_open_sham_final_voltage_rms_mv": 0.0002553006879556029,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 0.01899517706255927,
+          "closed_open_touch_displacement_delta": 8.067988709604339e-14,
+          "closed_open_touch_displacement_relative_change": 0.027408265537523055,
+          "closed_stimulated_mean_graded_release": 0.9018607593313989,
+          "closed_touch_evoked_forward_displacement": -2.8629535575518594e-12,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.486596486163215,
+          "open_stimulated_mean_graded_release": 0.9018607662310575,
+          "open_touch_evoked_forward_displacement": -2.9436334446479028e-12,
+          "seed": 305
+        },
+        {
+          "closed_open_sham_final_voltage_rms_mv": 0.0002552984067967957,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 0.012784379078377569,
+          "closed_open_touch_displacement_delta": 7.279354383551218e-14,
+          "closed_open_touch_displacement_relative_change": 0.027058922040731636,
+          "closed_stimulated_mean_graded_release": 0.9018610831007823,
+          "closed_touch_evoked_forward_displacement": -2.61739284740123e-12,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.48659354573583,
+          "open_stimulated_mean_graded_release": 0.9018610902580306,
+          "open_touch_evoked_forward_displacement": -2.690186391236742e-12,
+          "seed": 306
+        }
+      ],
+      "1.0": [
+        {
+          "closed_open_sham_final_voltage_rms_mv": 0.00255788546458218,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 0.010621389711882435,
+          "closed_open_touch_displacement_delta": 3.114851927838197e-13,
+          "closed_open_touch_displacement_relative_change": 0.2779378310630206,
+          "closed_stimulated_mean_graded_release": 0.90185941821481,
+          "closed_touch_evoked_forward_displacement": -8.092157625071224e-13,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.48657524435547,
+          "open_stimulated_mean_graded_release": 0.901859498354507,
+          "open_touch_evoked_forward_displacement": -1.120700955290942e-12,
+          "seed": 302
+        },
+        {
+          "closed_open_sham_final_voltage_rms_mv": 0.002557857974068836,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 0.026418220822274574,
+          "closed_open_touch_displacement_delta": 4.791957241004812e-13,
+          "closed_open_touch_displacement_relative_change": 0.2355451786063833,
+          "closed_stimulated_mean_graded_release": 0.9018596420588316,
+          "closed_touch_evoked_forward_displacement": -1.5552153682244413e-12,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.48663124669612,
+          "open_stimulated_mean_graded_release": 0.9018597221200746,
+          "open_touch_evoked_forward_displacement": -2.0344110923249225e-12,
+          "seed": 303
+        },
+        {
+          "closed_open_sham_final_voltage_rms_mv": 0.002557931780424882,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 0.010684541051534855,
+          "closed_open_touch_displacement_delta": 3.278432890186275e-13,
+          "closed_open_touch_displacement_relative_change": 0.26822058693952816,
+          "closed_stimulated_mean_graded_release": 0.90186104442001,
+          "closed_touch_evoked_forward_displacement": -8.944465163964267e-13,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.4865923759204,
+          "open_stimulated_mean_graded_release": 0.9018611246874846,
+          "open_touch_evoked_forward_displacement": -1.2222898054150542e-12,
+          "seed": 304
+        },
+        {
+          "closed_open_sham_final_voltage_rms_mv": 0.002557926233828395,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 0.11091176636381077,
+          "closed_open_touch_displacement_delta": 6.747368803654338e-13,
+          "closed_open_touch_displacement_relative_change": 0.22921905633061632,
+          "closed_stimulated_mean_graded_release": 0.9018606896670052,
+          "closed_touch_evoked_forward_displacement": -2.268896564282469e-12,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.486596486163215,
+          "open_stimulated_mean_graded_release": 0.9018607662310575,
+          "open_touch_evoked_forward_displacement": -2.9436334446479028e-12,
+          "seed": 305
+        },
+        {
+          "closed_open_sham_final_voltage_rms_mv": 0.002557903391178367,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 0.07265296553221746,
+          "closed_open_touch_displacement_delta": 6.108317564773302e-13,
+          "closed_open_touch_displacement_relative_change": 0.22705926937520357,
+          "closed_stimulated_mean_graded_release": 0.9018610120975857,
+          "closed_touch_evoked_forward_displacement": -2.079354634759412e-12,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.48659354573583,
+          "open_stimulated_mean_graded_release": 0.9018610902580306,
+          "open_touch_evoked_forward_displacement": -2.690186391236742e-12,
+          "seed": 306
+        }
+      ],
+      "10.0": [
+        {
+          "closed_open_sham_final_voltage_rms_mv": 0.02608543759122417,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 0.4295683748672523,
+          "closed_open_touch_displacement_delta": -6.873267340615454e-12,
+          "closed_open_touch_displacement_relative_change": 6.133007479083574,
+          "closed_stimulated_mean_graded_release": 0.90184767933208,
+          "closed_touch_evoked_forward_displacement": -7.993968295906396e-12,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.48657524435547,
+          "open_stimulated_mean_graded_release": 0.901859498354507,
+          "open_touch_evoked_forward_displacement": -1.120700955290942e-12,
+          "seed": 302
+        },
+        {
+          "closed_open_sham_final_voltage_rms_mv": 0.026085159173203656,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 0.4307269545648072,
+          "closed_open_touch_displacement_delta": -6.3201529025656864e-12,
+          "closed_open_touch_displacement_relative_change": 3.1066252668446785,
+          "closed_stimulated_mean_graded_release": 0.901847898532247,
+          "closed_touch_evoked_forward_displacement": -8.354563994890609e-12,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.48663124669612,
+          "open_stimulated_mean_graded_release": 0.9018597221200746,
+          "open_touch_evoked_forward_displacement": -2.0344110923249225e-12,
+          "seed": 303
+        },
+        {
+          "closed_open_sham_final_voltage_rms_mv": 0.026085907345908703,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 0.4297459245749601,
+          "closed_open_touch_displacement_delta": -6.818343655108293e-12,
+          "closed_open_touch_displacement_relative_change": 5.578336352721998,
+          "closed_stimulated_mean_graded_release": 0.9018493032132744,
+          "closed_touch_evoked_forward_displacement": -8.040633460523348e-12,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.4865923759204,
+          "open_stimulated_mean_graded_release": 0.9018611246874846,
+          "open_touch_evoked_forward_displacement": -1.2222898054150542e-12,
+          "seed": 304
+        },
+        {
+          "closed_open_sham_final_voltage_rms_mv": 0.026085850984303573,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 0.45837533884332565,
+          "closed_open_touch_displacement_delta": -5.714034733682851e-12,
+          "closed_open_touch_displacement_relative_change": 1.9411502284946776,
+          "closed_stimulated_mean_graded_release": 0.9018489430723827,
+          "closed_touch_evoked_forward_displacement": -8.657668178330754e-12,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.486596486163215,
+          "open_stimulated_mean_graded_release": 0.9018607662310575,
+          "open_touch_evoked_forward_displacement": -2.9436334446479028e-12,
+          "seed": 305
+        },
+        {
+          "closed_open_sham_final_voltage_rms_mv": 0.02608561939052853,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 0.44189872446150785,
+          "closed_open_touch_displacement_delta": -5.909925961011829e-12,
+          "closed_open_touch_displacement_relative_change": 2.196846278110453,
+          "closed_stimulated_mean_graded_release": 0.9018492654986571,
+          "closed_touch_evoked_forward_displacement": -8.600112352248571e-12,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 59.48659354573583,
+          "open_stimulated_mean_graded_release": 0.9018610902580306,
+          "open_touch_evoked_forward_displacement": -2.690186391236742e-12,
+          "seed": 306
+        }
+      ],
+      "100.0": [
+        {
+          "closed_open_sham_final_voltage_rms_mv": 0.3332016051371285,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 0.5184499898578254,
+          "closed_open_touch_displacement_delta": -1.930586822428519e-11,
+          "closed_open_touch_displacement_relative_change": 17.226601024243124,
+          "closed_stimulated_mean_graded_release": 0.9018367535393464,
+          "closed_touch_evoked_forward_displacement": -2.0426569179576133e-11,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 61.302265698039896,
+          "open_stimulated_mean_graded_release": 0.901859498354507,
+          "open_touch_evoked_forward_displacement": -1.120700955290942e-12,
+          "seed": 302
+        },
+        {
+          "closed_open_sham_final_voltage_rms_mv": 0.3331984663843665,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 0.4906396942171838,
+          "closed_open_touch_displacement_delta": -1.846623183406104e-11,
+          "closed_open_touch_displacement_relative_change": 9.076942169518873,
+          "closed_stimulated_mean_graded_release": 0.9018369605422517,
+          "closed_touch_evoked_forward_displacement": -2.0500642926385963e-11,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 61.302265666320054,
+          "open_stimulated_mean_graded_release": 0.9018597221200746,
+          "open_touch_evoked_forward_displacement": -2.0344110923249225e-12,
+          "seed": 303
+        },
+        {
+          "closed_open_sham_final_voltage_rms_mv": 0.33320696039355485,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 0.5173794935240601,
+          "closed_open_touch_displacement_delta": -1.9223323706425683e-11,
+          "closed_open_touch_displacement_relative_change": 15.72730429498919,
+          "closed_stimulated_mean_graded_release": 0.9018383789621301,
+          "closed_touch_evoked_forward_displacement": -2.0445613511840737e-11,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 61.30226594045894,
+          "open_stimulated_mean_graded_release": 0.9018611246874846,
+          "open_touch_evoked_forward_displacement": -1.2222898054150542e-12,
+          "seed": 304
+        },
+        {
+          "closed_open_sham_final_voltage_rms_mv": 0.33320630960174635,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 0.380880359569317,
+          "closed_open_touch_displacement_delta": -1.7543901708853326e-11,
+          "closed_open_touch_displacement_relative_change": 5.959947812371661,
+          "closed_stimulated_mean_graded_release": 0.9018379967485166,
+          "closed_touch_evoked_forward_displacement": -2.0487535153501228e-11,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 61.302265859904956,
+          "open_stimulated_mean_graded_release": 0.9018607662310575,
+          "open_touch_evoked_forward_displacement": -2.9436334446479028e-12,
+          "seed": 305
+        },
+        {
+          "closed_open_sham_final_voltage_rms_mv": 0.33320368299593517,
+          "closed_open_stimulated_event_count_difference": 0,
+          "closed_open_stimulated_final_voltage_rms_mv": 0.4286259156167167,
+          "closed_open_touch_displacement_delta": -1.7851989162974148e-11,
+          "closed_open_touch_displacement_relative_change": 6.635967389147027,
+          "closed_stimulated_mean_graded_release": 0.9018383228753946,
+          "closed_touch_evoked_forward_displacement": -2.054217555421089e-11,
+          "finite": true,
+          "max_abs_membrane_potential_mv": 61.30226595997896,
+          "open_stimulated_mean_graded_release": 0.9018610902580306,
+          "open_touch_evoked_forward_displacement": -2.690186391236742e-12,
+          "seed": 306
+        }
+      ]
+    }
+  },
+  "experiment_id": "C302-GRADED-RELEASE-FEEDBACK-LADDER-1",
+  "manifest": {
+    "cell_components": [
+      "GenericMuscleCell",
+      "GenericNeuronCell"
+    ],
+    "cells": 397,
+    "ion_channels": [
+      "Leak",
+      "ca_boyle",
+      "ca_simple",
+      "k_fast",
+      "k_slow"
+    ],
+    "muscles": 95,
+    "neural_connections": 3363,
+    "neuromuscular_connections": 552,
+    "neurons": 302,
+    "synapses": {
+      "neuron_to_muscle_exc_syn": 428,
+      "neuron_to_muscle_inh_syn": 124,
+      "neuron_to_neuron_elec_syn": 1084,
+      "neuron_to_neuron_exc_syn": 2079,
+      "neuron_to_neuron_inh_syn": 200
+    }
+  },
+  "protocol": {
+    "body_model": "damped_segment_chain",
+    "body_segments": 24,
+    "controls": [
+      "actual_closed_loop",
+      "actual_open_loop"
+    ],
+    "duration_ms": 1000.0,
+    "feedback_gain_ladder_pa": [
+      0.1,
+      1.0,
+      10.0,
+      100.0
+    ],
+    "graded_release": {
+      "delta_mv": 5.0,
+      "k_per_ms": 0.025,
+      "vth_mv": -35.0
+    },
+    "minimum_monotonic_steps": 3,
+    "minimum_pairwise_wins": 4,
+    "minimum_relative_change": 0.01,
+    "primary_metric": "closed_open_touch_displacement_relative_change",
+    "release_modes": [
+      "event",
+      "graded"
+    ],
+    "seeds": [
+      302,
+      303,
+      304,
+      305,
+      306
+    ],
+    "stimulus_component_id": "offset_current",
+    "synapse_model": "neuroml_graded_release_ladder",
+    "timestep_ms": 0.05
+  },
+  "run_at": "2026-08-03T04:49:06.912155+00:00",
+  "source": {
+    "include_files": [
+      {
+        "model_path": "examples/cell_C.xml",
+        "sha256": "268567c72ca409552f93c786c40f061bfdd900af34defaef417e45ffa6659ab4"
+      }
+    ],
+    "model_path": "examples/c302_C_Full.net.nml",
+    "repository": "https://github.com/openworm/c302",
+    "revision": "aad88a80aa7f217fe109a89f4b68ccb043430722",
+    "sha256": "619d714bcee72a83c056fce8a594aea791061f74f19d22c8c9da34c0656deb0c"
+  },
+  "source_experiment_id": "C302-NAMED-NEURON-PLACEMENT-1",
+  "summaries": {
+    "event": {
+      "0.1": {
+        "closed_open_sham_final_voltage_rms_mv": {
+          "mean": 3.913231256557481e-12,
+          "median": 3.756931174424062e-12
+        },
+        "closed_open_stimulated_event_count_difference": {
+          "mean": 0.0,
+          "median": 0
+        },
+        "closed_open_stimulated_final_voltage_rms_mv": {
+          "mean": 4.7810039799776974e-09,
+          "median": 4.781028256461132e-09
+        },
+        "closed_open_touch_displacement_delta": {
+          "mean": 0.0,
+          "median": 0.0
+        },
+        "closed_open_touch_displacement_relative_change": {
+          "mean": 0.0,
+          "median": 0.0
+        },
+        "closed_stimulated_mean_graded_release": {
+          "mean": 0.0,
+          "median": 0.0
+        },
+        "closed_touch_evoked_forward_displacement": {
+          "mean": -4.683609073455842e-10,
+          "median": -4.682603975226356e-10
+        },
+        "max_abs_membrane_potential_mv": {
+          "mean": 59.95458819352952,
+          "median": 59.954588212991496
+        },
+        "open_stimulated_mean_graded_release": {
+          "mean": 0.0,
+          "median": 0.0
+        },
+        "open_touch_evoked_forward_displacement": {
+          "mean": -4.683609073455842e-10,
+          "median": -4.682603975226356e-10
+        }
+      },
+      "1.0": {
+        "closed_open_sham_final_voltage_rms_mv": {
+          "mean": 3.8569264974593986e-11,
+          "median": 3.650437168059284e-11
+        },
+        "closed_open_stimulated_event_count_difference": {
+          "mean": 0.0,
+          "median": 0
+        },
+        "closed_open_stimulated_final_voltage_rms_mv": {
+          "mean": 4.781003932404364e-08,
+          "median": 4.781027960330431e-08
+        },
+        "closed_open_touch_displacement_delta": {
+          "mean": 0.0,
+          "median": 0.0
+        },
+        "closed_open_touch_displacement_relative_change": {
+          "mean": 0.0,
+          "median": 0.0
+        },
+        "closed_stimulated_mean_graded_release": {
+          "mean": 0.0,
+          "median": 0.0
+        },
+        "closed_touch_evoked_forward_displacement": {
+          "mean": -4.683609073455842e-10,
+          "median": -4.682603975226356e-10
+        },
+        "max_abs_membrane_potential_mv": {
+          "mean": 59.95458819352952,
+          "median": 59.954588212991496
+        },
+        "open_stimulated_mean_graded_release": {
+          "mean": 0.0,
+          "median": 0.0
+        },
+        "open_touch_evoked_forward_displacement": {
+          "mean": -4.683609073455842e-10,
+          "median": -4.682603975226356e-10
+        }
+      },
+      "10.0": {
+        "closed_open_sham_final_voltage_rms_mv": {
+          "mean": 3.854450177631293e-10,
+          "median": 3.647698631741486e-10
+        },
+        "closed_open_stimulated_event_count_difference": {
+          "mean": 0.0,
+          "median": 0
+        },
+        "closed_open_stimulated_final_voltage_rms_mv": {
+          "mean": 4.781003887022127e-07,
+          "median": 4.781028083980852e-07
+        },
+        "closed_open_touch_displacement_delta": {
+          "mean": 0.0,
+          "median": 0.0
+        },
+        "closed_open_touch_displacement_relative_change": {
+          "mean": 0.0,
+          "median": 0.0
+        },
+        "closed_stimulated_mean_graded_release": {
+          "mean": 0.0,
+          "median": 0.0
+        },
+        "closed_touch_evoked_forward_displacement": {
+          "mean": -4.683609073455842e-10,
+          "median": -4.682603975226356e-10
+        },
+        "max_abs_membrane_potential_mv": {
+          "mean": 59.95458819352952,
+          "median": 59.954588212991496
+        },
+        "open_stimulated_mean_graded_release": {
+          "mean": 0.0,
+          "median": 0.0
+        },
+        "open_touch_evoked_forward_displacement": {
+          "mean": -4.683609073455842e-10,
+          "median": -4.682603975226356e-10
+        }
+      },
+      "100.0": {
+        "closed_open_sham_final_voltage_rms_mv": {
+          "mean": 3.8543780143635826e-09,
+          "median": 3.64762697986593e-09
+        },
+        "closed_open_stimulated_event_count_difference": {
+          "mean": 0.0,
+          "median": 0
+        },
+        "closed_open_stimulated_final_voltage_rms_mv": {
+          "mean": 4.781003945662653e-06,
+          "median": 4.781028132519757e-06
+        },
+        "closed_open_touch_displacement_delta": {
+          "mean": 0.0,
+          "median": 0.0
+        },
+        "closed_open_touch_displacement_relative_change": {
+          "mean": 0.0,
+          "median": 0.0
+        },
+        "closed_stimulated_mean_graded_release": {
+          "mean": 0.0,
+          "median": 0.0
+        },
+        "closed_touch_evoked_forward_displacement": {
+          "mean": -4.683609073455842e-10,
+          "median": -4.682603975226356e-10
+        },
+        "max_abs_membrane_potential_mv": {
+          "mean": 59.95458819352952,
+          "median": 59.954588212991496
+        },
+        "open_stimulated_mean_graded_release": {
+          "mean": 0.0,
+          "median": 0.0
+        },
+        "open_touch_evoked_forward_displacement": {
+          "mean": -4.683609073455842e-10,
+          "median": -4.682603975226356e-10
+        }
+      }
+    },
+    "graded": {
+      "0.1": {
+        "closed_open_sham_final_voltage_rms_mv": {
+          "mean": 0.000255298164856931,
+          "median": 0.0002552984067967957
+        },
+        "closed_open_stimulated_event_count_difference": {
+          "mean": 0.0,
+          "median": 0
+        },
+        "closed_open_stimulated_final_voltage_rms_mv": {
+          "mean": 0.00925352972851094,
+          "median": 0.005868165003027711
+        },
+        "closed_open_touch_displacement_delta": {
+          "mean": 5.722270772813171e-14,
+          "median": 5.681218438356603e-14
+        },
+        "closed_open_touch_displacement_relative_change": {
+          "mean": 0.02943422267247392,
+          "median": 0.02792561670445924
+        },
+        "closed_stimulated_mean_graded_release": {
+          "mean": 0.9018604329890682,
+          "median": 0.9018607593313989
+        },
+        "closed_touch_evoked_forward_displacement": {
+          "mean": -1.945021630054981e-12,
+          "median": -1.9775989079413565e-12
+        },
+        "max_abs_membrane_potential_mv": {
+          "mean": 59.48659777977421,
+          "median": 59.48659354573583
+        },
+        "open_stimulated_mean_graded_release": {
+          "mean": 0.9018604403302308,
+          "median": 0.9018607662310575
+        },
+        "open_touch_evoked_forward_displacement": {
+          "mean": -2.002244337783113e-12,
+          "median": -2.0344110923249225e-12
+        }
+      },
+      "1.0": {
+        "closed_open_sham_final_voltage_rms_mv": {
+          "mean": 0.002557900968816532,
+          "median": 0.002557903391178367
+        },
+        "closed_open_stimulated_event_count_difference": {
+          "mean": 0.0,
+          "median": 0
+        },
+        "closed_open_stimulated_final_voltage_rms_mv": {
+          "mean": 0.046257776696344025,
+          "median": 0.026418220822274574
+        },
+        "closed_open_touch_displacement_delta": {
+          "mean": 4.808185685491384e-13,
+          "median": 4.791957241004812e-13
+        },
+        "closed_open_touch_displacement_relative_change": {
+          "mean": 0.24759638446295038,
+          "median": 0.2355451786063833
+        },
+        "closed_stimulated_mean_graded_release": {
+          "mean": 0.9018603612916485,
+          "median": 0.9018606896670052
+        },
+        "closed_touch_evoked_forward_displacement": {
+          "mean": -1.5214257692339743e-12,
+          "median": -1.5552153682244413e-12
+        },
+        "max_abs_membrane_potential_mv": {
+          "mean": 59.48659777977421,
+          "median": 59.48659354573583
+        },
+        "open_stimulated_mean_graded_release": {
+          "mean": 0.9018604403302308,
+          "median": 0.9018607662310575
+        },
+        "open_touch_evoked_forward_displacement": {
+          "mean": -2.002244337783113e-12,
+          "median": -2.0344110923249225e-12
+        }
+      },
+      "10.0": {
+        "closed_open_sham_final_voltage_rms_mv": {
+          "mean": 0.026085594897033725,
+          "median": 0.02608561939052853
+        },
+        "closed_open_stimulated_event_count_difference": {
+          "mean": 0.0,
+          "median": 0
+        },
+        "closed_open_stimulated_final_voltage_rms_mv": {
+          "mean": 0.43806306346237067,
+          "median": 0.4307269545648072
+        },
+        "closed_open_touch_displacement_delta": {
+          "mean": -6.327144918596823e-12,
+          "median": -6.3201529025656864e-12
+        },
+        "closed_open_touch_displacement_relative_change": {
+          "mean": 3.7911931210510756,
+          "median": 3.1066252668446785
+        },
+        "closed_stimulated_mean_graded_release": {
+          "mean": 0.9018486179297283,
+          "median": 0.9018489430723827
+        },
+        "closed_touch_evoked_forward_displacement": {
+          "mean": -8.329389256379936e-12,
+          "median": -8.354563994890609e-12
+        },
+        "max_abs_membrane_potential_mv": {
+          "mean": 59.48659777977421,
+          "median": 59.48659354573583
+        },
+        "open_stimulated_mean_graded_release": {
+          "mean": 0.9018604403302308,
+          "median": 0.9018607662310575
+        },
+        "open_touch_evoked_forward_displacement": {
+          "mean": -2.002244337783113e-12,
+          "median": -2.0344110923249225e-12
+        }
+      },
+      "100.0": {
+        "closed_open_sham_final_voltage_rms_mv": {
+          "mean": 0.3332034049025463,
+          "median": 0.33320368299593517
+        },
+        "closed_open_stimulated_event_count_difference": {
+          "mean": 0.0,
+          "median": 0
+        },
+        "closed_open_stimulated_final_voltage_rms_mv": {
+          "mean": 0.46719509055702063,
+          "median": 0.4906396942171838
+        },
+        "closed_open_touch_displacement_delta": {
+          "mean": -1.8478262927319878e-11,
+          "median": -1.846623183406104e-11
+        },
+        "closed_open_touch_displacement_relative_change": {
+          "mean": 10.925352538053975,
+          "median": 9.076942169518873
+        },
+        "closed_stimulated_mean_graded_release": {
+          "mean": 0.9018376825335279,
+          "median": 0.9018379967485166
+        },
+        "closed_touch_evoked_forward_displacement": {
+          "mean": -2.048050726510299e-11,
+          "median": -2.0487535153501228e-11
+        },
+        "max_abs_membrane_potential_mv": {
+          "mean": 61.30226582494056,
+          "median": 61.302265859904956
+        },
+        "open_stimulated_mean_graded_release": {
+          "mean": 0.9018604403302308,
+          "median": 0.9018607662310575
+        },
+        "open_touch_evoked_forward_displacement": {
+          "mean": -2.002244337783113e-12,
+          "median": -2.0344110923249225e-12
+        }
+      }
+    }
+  },
+  "verdict": {
+    "all_finite": true,
+    "first_qualifying_gain_pa": 0.1,
+    "graded_exceeds_event_at_first_qualifying_gain": true,
+    "graded_median_relative_changes": {
+      "0.1": 0.02792561670445924,
+      "1.0": 0.2355451786063833,
+      "10.0": 3.1066252668446785,
+      "100.0": 9.076942169518873
+    },
+    "graded_monotonic_steps": 3,
+    "landing_passed": true,
+    "qualification_counts": {
+      "event": {
+        "0.1": 0,
+        "1.0": 0,
+        "10.0": 0,
+        "100.0": 0
+      },
+      "graded": {
+        "0.1": 5,
+        "1.0": 5,
+        "10.0": 5,
+        "100.0": 5
+      }
+    },
+    "qualifying_graded_gains_pa": [
+      0.1,
+      1.0,
+      10.0,
+      100.0
+    ]
+  }
+}

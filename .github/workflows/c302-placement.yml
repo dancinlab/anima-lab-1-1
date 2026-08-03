@@ -24,3 +24,4 @@ jobs:
       - run: python -m c302_placement dynamics --experiment-id C302-EXCLUSIVE-MOTOR-DYNAMICS-1 --output /tmp/c302-exclusive-motor.json
       - run: python -m c302_placement dynamics --experiment-id C302-SIGNED-SYNAPSE-DYNAMICS-1 --output /tmp/c302-signed-synapse.json
       - run: python -m c302_placement biophysics --output /tmp/c302-neuromuscular-body.json
+      - run: python -m c302_placement biophysics --experiment-id C302-GRADED-RELEASE-FEEDBACK-LADDER-1 --output /tmp/c302-graded-release-feedback-ladder.json

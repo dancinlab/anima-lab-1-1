@@ -8,6 +8,7 @@ import random
 import re
 from dataclasses import replace
 from datetime import datetime, timezone
+from itertools import pairwise
 from pathlib import Path
 from statistics import fmean, median
 
@@ -91,6 +92,8 @@ class ConductanceBodyRuntime:
         protocol: BiophysicsSpec,
         seed: int,
         feedback_enabled: bool,
+        release_mode: str = "event",
+        feedback_gain_pa: float | None = None,
     ) -> None:
         import numpy as np
 
@@ -99,6 +102,27 @@ class ConductanceBodyRuntime:
         self.protocol = protocol
         self.dt = model.recommended_timestep_ms
         self.feedback_enabled = feedback_enabled
+        if release_mode not in {"event", "graded"}:
+            raise ValueError(f"unsupported chemical release mode: {release_mode}")
+        self.release_mode = release_mode
+        self.feedback_gain_pa = (
+            protocol.proprioceptive_feedback_gain_pa
+            if feedback_gain_pa is None
+            else feedback_gain_pa
+        )
+        if self.feedback_gain_pa < 0:
+            raise ValueError("proprioceptive feedback gain must be nonnegative")
+        if release_mode == "graded":
+            if (
+                protocol.graded_release_vth_mv is None
+                or protocol.graded_release_delta_mv is None
+                or protocol.graded_release_k_per_ms is None
+            ):
+                raise ValueError("graded release parameters are not registered")
+            if protocol.graded_release_delta_mv <= 0:
+                raise ValueError("graded release delta must be positive")
+            if protocol.graded_release_k_per_ms <= 0:
+                raise ValueError("graded release rate must be positive")
         self.index = {cell.cell_id: index for index, cell in enumerate(model.cells)}
         self.cell_ids = [cell.cell_id for cell in model.cells]
         self.is_muscle = np.array(
@@ -230,6 +254,7 @@ class ConductanceBodyRuntime:
                     "factor": factor,
                     "rise": np.zeros(len(edges)),
                     "decay": np.zeros(len(edges)),
+                    "graded_state": np.zeros(len(edges)),
                 }
             )
         self.electrical_groups = []
@@ -286,6 +311,8 @@ class ConductanceBodyRuntime:
         self.curvature_velocity = np.zeros(protocol.body_segments)
         self.forward_displacement = 0.0
         self.event_count = 0
+        self.graded_release_sum = 0.0
+        self.graded_release_samples = 0
         self.max_abs_voltage = float(np.abs(self.voltage).max())
         self.curvature_samples: list[object] = []
         self.velocity_samples: list[object] = []
@@ -331,9 +358,12 @@ class ConductanceBodyRuntime:
         np = self.np
         current = np.zeros(len(self.voltage))
         for group in self.chemical_groups:
-            conductance = (
-                group["gbase"] * group["weight"] * (group["decay"] - group["rise"])
+            release = (
+                group["graded_state"]
+                if self.release_mode == "graded"
+                else group["decay"] - group["rise"]
             )
+            conductance = group["gbase"] * group["weight"] * release
             edge_current = conductance * (group["erev"] - self.voltage[group["target"]])
             current += np.bincount(
                 group["target"], edge_current, minlength=len(current)
@@ -355,11 +385,38 @@ class ConductanceBodyRuntime:
         current = np.zeros(len(self.voltage))
         if self.feedback_enabled:
             current[self.stimulus_targets] = (
-                self.protocol.proprioceptive_feedback_gain_pa
+                self.feedback_gain_pa
                 * self.target_sides
                 * self.curvature[self.target_segments]
             )
         return current
+
+    def _update_chemical_release(self, crossed) -> None:
+        np = self.np
+        if self.release_mode == "event":
+            for group in self.chemical_groups:
+                group["rise"] *= group["rise_alpha"]
+                group["decay"] *= group["decay_alpha"]
+                events = crossed[group["source"]]
+                group["rise"][events] += group["factor"]
+                group["decay"][events] += group["factor"]
+            return
+
+        vth = self.protocol.graded_release_vth_mv
+        delta = self.protocol.graded_release_delta_mv
+        rate = self.protocol.graded_release_k_per_ms
+        for group in self.chemical_groups:
+            source_voltage = self.voltage[group["source"]]
+            exponent = np.clip((vth - source_voltage) / delta, -700.0, 700.0)
+            steady_state = 1.0 / (1.0 + np.exp(exponent))
+            state = group["graded_state"]
+            saturated = (1.0 - steady_state) < 1e-4
+            tau_ms = (1.0 - steady_state) / rate
+            alpha = -np.expm1(-self.dt / np.maximum(tau_ms, self.dt * 1e-12))
+            state += alpha * (steady_state - state)
+            state[saturated] = steady_state[saturated]
+            self.graded_release_sum += float(state.sum())
+            self.graded_release_samples += len(state)
 
     def _update_body(self, sample: bool) -> None:
         np = self.np
@@ -454,12 +511,7 @@ class ConductanceBodyRuntime:
             self.voltage >= self.threshold
         )
         self.event_count += int(crossed.sum())
-        for group in self.chemical_groups:
-            group["rise"] *= group["rise_alpha"]
-            group["decay"] *= group["decay_alpha"]
-            events = crossed[group["source"]]
-            group["rise"][events] += group["factor"]
-            group["decay"][events] += group["factor"]
+        self._update_chemical_release(crossed)
         self._update_body(sample)
 
     def run(self, stimulus_enabled: bool) -> dict:
@@ -490,12 +542,18 @@ class ConductanceBodyRuntime:
                 np.std(self.muscle_activation[self.is_muscle])
             ),
             "event_count": self.event_count,
+            "mean_graded_release": (
+                self.graded_release_sum / self.graded_release_samples
+                if self.graded_release_samples
+                else 0.0
+            ),
             "max_abs_membrane_potential_mv": self.max_abs_voltage,
             "finite": bool(
                 np.isfinite(self.voltage).all()
                 and np.isfinite(self.curvature).all()
                 and np.isfinite(self.calcium).all()
             ),
+            "_final_voltage": self.voltage.copy(),
         }
 
 
@@ -504,13 +562,25 @@ def _run_pair(
     protocol: BiophysicsSpec,
     seed: int,
     feedback_enabled: bool,
+    release_mode: str = "event",
+    feedback_gain_pa: float | None = None,
 ) -> dict:
-    stimulated = ConductanceBodyRuntime(model, protocol, seed, feedback_enabled).run(
-        stimulus_enabled=True
-    )
-    sham = ConductanceBodyRuntime(model, protocol, seed, feedback_enabled).run(
-        stimulus_enabled=False
-    )
+    stimulated = ConductanceBodyRuntime(
+        model,
+        protocol,
+        seed,
+        feedback_enabled,
+        release_mode=release_mode,
+        feedback_gain_pa=feedback_gain_pa,
+    ).run(stimulus_enabled=True)
+    sham = ConductanceBodyRuntime(
+        model,
+        protocol,
+        seed,
+        feedback_enabled,
+        release_mode=release_mode,
+        feedback_gain_pa=feedback_gain_pa,
+    ).run(stimulus_enabled=False)
     return {
         "seed": seed,
         "touch_evoked_forward_displacement": (
@@ -528,11 +598,23 @@ def _run_pair(
         ],
         "stimulated_event_count": stimulated["event_count"],
         "sham_event_count": sham["event_count"],
+        "stimulated_mean_graded_release": stimulated["mean_graded_release"],
+        "sham_mean_graded_release": sham["mean_graded_release"],
         "max_abs_membrane_potential_mv": max(
             stimulated["max_abs_membrane_potential_mv"],
             sham["max_abs_membrane_potential_mv"],
         ),
         "finite": stimulated["finite"] and sham["finite"],
+        "_stimulated_final_voltage": stimulated["_final_voltage"],
+        "_sham_final_voltage": sham["_final_voltage"],
+    }
+
+
+def _public_row(row: dict) -> dict:
+    return {
+        key: value
+        for key, value in row.items()
+        if not key.startswith("_") and "mean_graded_release" not in key
     }
 
 
@@ -545,6 +627,270 @@ def _summarize(rows: list[dict]) -> dict:
         }
         for metric in metrics
     }
+
+
+def _model_manifest(model: NeuromuscularModel) -> dict:
+    cell_types = {cell.cell_id: cell.cell_type for cell in model.cells}
+    neural_edges = [
+        edge
+        for edge in model.connections
+        if cell_types[edge.source] != "muscle" and cell_types[edge.target] != "muscle"
+    ]
+    neuromuscular_edges = [
+        edge for edge in model.connections if cell_types[edge.target] == "muscle"
+    ]
+    return {
+        "cells": len(model.cells),
+        "neurons": sum(cell.cell_type != "muscle" for cell in model.cells),
+        "muscles": sum(cell.cell_type == "muscle" for cell in model.cells),
+        "neural_connections": len(neural_edges),
+        "neuromuscular_connections": len(neuromuscular_edges),
+        "cell_components": [
+            component.component_id for component in model.cell_components
+        ],
+        "ion_channels": [channel.channel_id for channel in model.ion_channels],
+        "synapses": {
+            mechanism.mechanism_id: sum(
+                edge.synapse == mechanism.mechanism_id for edge in model.connections
+            )
+            for mechanism in model.synapse_mechanisms
+        },
+    }
+
+
+def _source_record(spec: ExperimentSpec) -> dict:
+    return {
+        "repository": spec.source.repository,
+        "revision": spec.source.revision,
+        "model_path": spec.source.model_path,
+        "sha256": spec.source.sha256,
+        "include_files": [
+            {
+                "model_path": artifact.model_path,
+                "sha256": artifact.sha256,
+            }
+            for artifact in spec.source.include_files
+        ],
+    }
+
+
+def _write_results(output_path: Path, results: dict) -> dict:
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(
+        json.dumps(results, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    return results
+
+
+def _run_release_ladder(
+    spec: ExperimentSpec,
+    protocol: BiophysicsSpec,
+    model: NeuromuscularModel,
+    output_path: Path,
+) -> dict:
+    np = __import__("numpy")
+    if protocol.controls != ("actual_closed_loop", "actual_open_loop"):
+        raise ValueError("graded release ladder requires canonical closed/open arms")
+    if protocol.release_modes != ("event", "graded"):
+        raise ValueError("graded release ladder requires event and graded controls")
+    if not protocol.feedback_gain_ladder_pa or any(
+        gain <= 0 for gain in protocol.feedback_gain_ladder_pa
+    ):
+        raise ValueError("graded release feedback ladder must contain positive gains")
+    if any(
+        right <= left
+        for left, right in pairwise(protocol.feedback_gain_ladder_pa)
+    ):
+        raise ValueError("graded release feedback ladder must be strictly increasing")
+    if protocol.primary_metric != "closed_open_touch_displacement_relative_change":
+        raise ValueError(f"unsupported graded primary metric: {protocol.primary_metric}")
+
+    open_rows = {
+        (mode, seed): _run_pair(
+            model,
+            protocol,
+            seed,
+            feedback_enabled=False,
+            release_mode=mode,
+            feedback_gain_pa=0.0,
+        )
+        for mode in protocol.release_modes
+        for seed in protocol.seeds
+    }
+    arms: dict[str, dict[str, list[dict]]] = {}
+    for mode in protocol.release_modes:
+        mode_rows: dict[str, list[dict]] = {}
+        for gain in protocol.feedback_gain_ladder_pa:
+            rows = []
+            for seed in protocol.seeds:
+                closed = _run_pair(
+                    model,
+                    protocol,
+                    seed,
+                    feedback_enabled=True,
+                    release_mode=mode,
+                    feedback_gain_pa=gain,
+                )
+                opened = open_rows[(mode, seed)]
+                closed_displacement = closed["touch_evoked_forward_displacement"]
+                open_displacement = opened["touch_evoked_forward_displacement"]
+                displacement_delta = closed_displacement - open_displacement
+                relative_change = abs(displacement_delta) / max(
+                    abs(open_displacement), 1e-12
+                )
+                stimulated_voltage_rms = float(
+                    np.sqrt(
+                        np.mean(
+                            (
+                                closed["_stimulated_final_voltage"]
+                                - opened["_stimulated_final_voltage"]
+                            )
+                            ** 2
+                        )
+                    )
+                )
+                sham_voltage_rms = float(
+                    np.sqrt(
+                        np.mean(
+                            (
+                                closed["_sham_final_voltage"]
+                                - opened["_sham_final_voltage"]
+                            )
+                            ** 2
+                        )
+                    )
+                )
+                rows.append(
+                    {
+                        "seed": seed,
+                        protocol.primary_metric: relative_change,
+                        "closed_open_touch_displacement_delta": displacement_delta,
+                        "closed_touch_evoked_forward_displacement": closed_displacement,
+                        "open_touch_evoked_forward_displacement": open_displacement,
+                        "closed_open_stimulated_final_voltage_rms_mv": (
+                            stimulated_voltage_rms
+                        ),
+                        "closed_open_sham_final_voltage_rms_mv": sham_voltage_rms,
+                        "closed_open_stimulated_event_count_difference": abs(
+                            closed["stimulated_event_count"]
+                            - opened["stimulated_event_count"]
+                        ),
+                        "closed_stimulated_mean_graded_release": closed[
+                            "stimulated_mean_graded_release"
+                        ],
+                        "open_stimulated_mean_graded_release": opened[
+                            "stimulated_mean_graded_release"
+                        ],
+                        "max_abs_membrane_potential_mv": max(
+                            closed["max_abs_membrane_potential_mv"],
+                            opened["max_abs_membrane_potential_mv"],
+                        ),
+                        "finite": closed["finite"] and opened["finite"],
+                    }
+                )
+            mode_rows[str(gain)] = rows
+        arms[mode] = mode_rows
+
+    summaries = {
+        mode: {gain: _summarize(rows) for gain, rows in mode_rows.items()}
+        for mode, mode_rows in arms.items()
+    }
+    qualification_counts = {
+        mode: {
+            gain: sum(
+                row[protocol.primary_metric] >= protocol.minimum_relative_change
+                for row in rows
+            )
+            for gain, rows in mode_rows.items()
+        }
+        for mode, mode_rows in arms.items()
+    }
+    gain_keys = [str(gain) for gain in protocol.feedback_gain_ladder_pa]
+    graded_medians = [
+        summaries["graded"][gain][protocol.primary_metric]["median"]
+        for gain in gain_keys
+    ]
+    monotonic_steps = sum(
+        right >= left for left, right in pairwise(graded_medians)
+    )
+    qualifying_gains = [
+        gain
+        for gain in gain_keys
+        if qualification_counts["graded"][gain] >= protocol.minimum_pairwise_wins
+    ]
+    first_qualifying_gain = qualifying_gains[0] if qualifying_gains else None
+    graded_exceeds_event = bool(
+        first_qualifying_gain is not None
+        and summaries["graded"][first_qualifying_gain][protocol.primary_metric][
+            "median"
+        ]
+        > summaries["event"][first_qualifying_gain][protocol.primary_metric]["median"]
+    )
+    all_finite = all(
+        row["finite"]
+        for mode_rows in arms.values()
+        for rows in mode_rows.values()
+        for row in rows
+    )
+    landing_passed = (
+        first_qualifying_gain is not None
+        and monotonic_steps >= protocol.minimum_monotonic_steps
+        and graded_exceeds_event
+        and all_finite
+    )
+    results = {
+        "experiment_id": protocol.experiment_id,
+        "run_at": datetime.now(timezone.utc).isoformat(),
+        "source_experiment_id": spec.experiment_id,
+        "source": _source_record(spec),
+        "protocol": {
+            "seeds": list(protocol.seeds),
+            "controls": list(protocol.controls),
+            "release_modes": list(protocol.release_modes),
+            "feedback_gain_ladder_pa": list(protocol.feedback_gain_ladder_pa),
+            "timestep_ms": model.recommended_timestep_ms,
+            "duration_ms": model.recommended_duration_ms,
+            "stimulus_component_id": protocol.stimulus_component_id,
+            "synapse_model": protocol.synapse_model,
+            "graded_release": {
+                "vth_mv": protocol.graded_release_vth_mv,
+                "delta_mv": protocol.graded_release_delta_mv,
+                "k_per_ms": protocol.graded_release_k_per_ms,
+            },
+            "body_model": protocol.body_model,
+            "body_segments": protocol.body_segments,
+            "primary_metric": protocol.primary_metric,
+            "minimum_relative_change": protocol.minimum_relative_change,
+            "minimum_pairwise_wins": protocol.minimum_pairwise_wins,
+            "minimum_monotonic_steps": protocol.minimum_monotonic_steps,
+        },
+        "manifest": _model_manifest(model),
+        "arms": arms,
+        "summaries": summaries,
+        "verdict": {
+            "qualification_counts": qualification_counts,
+            "graded_median_relative_changes": dict(zip(gain_keys, graded_medians)),
+            "graded_monotonic_steps": monotonic_steps,
+            "qualifying_graded_gains_pa": [float(gain) for gain in qualifying_gains],
+            "first_qualifying_gain_pa": (
+                float(first_qualifying_gain)
+                if first_qualifying_gain is not None
+                else None
+            ),
+            "graded_exceeds_event_at_first_qualifying_gain": graded_exceeds_event,
+            "all_finite": all_finite,
+            "landing_passed": landing_passed,
+        },
+    }
+    if not all(
+        math.isfinite(value["mean"])
+        for mode_summaries in summaries.values()
+        for summary in mode_summaries.values()
+        for value in summary.values()
+    ):
+        raise ValueError("graded release ladder produced a non-finite summary")
+    return _write_results(output_path, results)
 
 
 def run_biophysics(
@@ -561,6 +907,10 @@ def run_biophysics(
         raise ValueError(f"unsupported timestep source: {protocol.timestep_source}")
     if protocol.duration_source != "network.recommended_duration_ms":
         raise ValueError(f"unsupported duration source: {protocol.duration_source}")
+    if protocol.synapse_model == "neuroml_graded_release_ladder":
+        if protocol.body_model != "damped_segment_chain":
+            raise ValueError(f"unsupported body model: {protocol.body_model}")
+        return _run_release_ladder(spec, protocol, model, output_path)
     if protocol.synapse_model != "neuroml_event_conductance":
         raise ValueError(f"unsupported synapse model: {protocol.synapse_model}")
     if protocol.body_model != "damped_segment_chain":
@@ -570,7 +920,7 @@ def run_biophysics(
     )
     arms = {
         name: [
-            _run_pair(variant, protocol, seed, feedback_enabled)
+            _public_row(_run_pair(variant, protocol, seed, feedback_enabled))
             for seed in protocol.seeds
         ]
         for name, (variant, feedback_enabled) in variants.items()
@@ -598,32 +948,11 @@ def run_biophysics(
         )
         and all_finite
     )
-    cell_types = {cell.cell_id: cell.cell_type for cell in model.cells}
-    neural_edges = [
-        edge
-        for edge in model.connections
-        if cell_types[edge.source] != "muscle" and cell_types[edge.target] != "muscle"
-    ]
-    neuromuscular_edges = [
-        edge for edge in model.connections if cell_types[edge.target] == "muscle"
-    ]
     results = {
         "experiment_id": protocol.experiment_id,
         "run_at": datetime.now(timezone.utc).isoformat(),
         "source_experiment_id": spec.experiment_id,
-        "source": {
-            "repository": spec.source.repository,
-            "revision": spec.source.revision,
-            "model_path": spec.source.model_path,
-            "sha256": spec.source.sha256,
-            "include_files": [
-                {
-                    "model_path": artifact.model_path,
-                    "sha256": artifact.sha256,
-                }
-                for artifact in spec.source.include_files
-            ],
-        },
+        "source": _source_record(spec),
         "protocol": {
             "seeds": list(protocol.seeds),
             "controls": list(protocol.controls),
@@ -643,23 +972,7 @@ def run_biophysics(
             "primary_metric": primary,
             "minimum_pairwise_wins": protocol.minimum_pairwise_wins,
         },
-        "manifest": {
-            "cells": len(model.cells),
-            "neurons": sum(cell.cell_type != "muscle" for cell in model.cells),
-            "muscles": sum(cell.cell_type == "muscle" for cell in model.cells),
-            "neural_connections": len(neural_edges),
-            "neuromuscular_connections": len(neuromuscular_edges),
-            "cell_components": [
-                component.component_id for component in model.cell_components
-            ],
-            "ion_channels": [channel.channel_id for channel in model.ion_channels],
-            "synapses": {
-                mechanism.mechanism_id: sum(
-                    edge.synapse == mechanism.mechanism_id for edge in model.connections
-                )
-                for mechanism in model.synapse_mechanisms
-            },
-        },
+        "manifest": _model_manifest(model),
         "arms": arms,
         "summaries": summaries,
         "verdict": {
@@ -678,9 +991,4 @@ def run_biophysics(
         for value in summary.values()
     ):
         raise ValueError("biophysical dynamics produced a non-finite summary")
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(
-        json.dumps(results, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
-    )
-    return results
+    return _write_results(output_path, results)

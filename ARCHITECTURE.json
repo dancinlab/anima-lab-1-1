@@ -159,7 +159,7 @@
             "name": "neuromuscular body runtime",
             "role": "GRU를 source-declared conductance·muscle dynamics와 24체절 폐루프로 대체",
             "id": "c302-neuromuscular-body-runtime",
-            "detail": "고정 upstream revision에서 c302_C_Full.net.nml과 cell_C.xml을 각각 checksum 검증해 302 뉴런·95 근육·3,915 연결·막전위·HH gate·칼슘·PLML/PLMR 입력을 복원한다. phase 5는 유한·결정적으로 실행됐으나 actual closed-loop displacement -4.68260e-10이 neural shuffle 5.26533e-11보다 낮아 실패했다. 등록된 0.1pA strain feedback은 event time을 바꾸지 못해 open loop와 bit-identical했다."
+            "detail": "고정 upstream revision에서 c302_C_Full.net.nml과 cell_C.xml을 각각 checksum 검증해 302 뉴런·95 근육·3,915 연결·막전위·HH gate·칼슘·PLML/PLMR 입력을 복원한다. phase 5는 유한·결정적으로 실행됐으나 actual closed-loop displacement -4.68260e-10이 neural shuffle 5.26533e-11보다 낮아 실패했고, event-only release에서는 0.1pA strain feedback이 open loop와 bit-identical했다. phase 6은 동일 엔진에 NeuroML gradedSynapse 방출을 선택 모드로 추가했다. 사전등록된 0.1/1/10/100pA 사다리에서 closed/open 상대 변화가 2.79%/23.55%/310.66%/907.69%, 각 5/5 seed로 통과했고 event control은 모두 0%였다. 이는 연속 방출을 통한 인과적 아날로그 전달만 확립하며 생물학적 파라미터·전진 이동·topology 우위는 확립하지 않는다."
           }
         ]
       },
